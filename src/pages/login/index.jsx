@@ -41,31 +41,31 @@ export default function Login() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #eee', borderRadius: 8 }}>
-      <h2 style={{ marginBottom: 24 }}>เข้าสู่ระบบ</h2>
+    <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' , marginTop: '250px'}}>
+      <h2 style={{ marginBottom: 24, color: '#ff69b4', textAlign: 'center', fontWeight: 700 }}>เข้าสู่ระบบ</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: 16 }}>
-          <label>Username</label>
+          <label style={{ fontWeight: 500 }}>Username</label>
           <input
             type="text"
             value={username}
             onChange={e => setUsername(e.target.value)}
             required
-            style={{ width: '100%', padding: 8, marginTop: 4 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
           />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <label>Password</label>
+          <label style={{ fontWeight: 500 }}>Password</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: 8, marginTop: 4 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
           />
         </div>
         {error && <div style={{ color: 'red', marginBottom: 16 }}>{error}</div>}
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: 10 }}>
+        <button type="submit" disabled={loading} className="btn-pink" style={{ width: '100%' }}>
           {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
         </button>
       </form>

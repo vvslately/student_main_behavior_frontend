@@ -115,11 +115,59 @@ app.post('/api/behaviors', async (req, res) => {
     return res.status(400).json({ message: 'behavior_name is required.' });
   }
   try {
-    await db.execute(
+    const [result] = await db.execute(
       'INSERT INTO behaviors (behavior_name, description, severity_level) VALUES (?, ?, ?)',
       [behavior_name, description || null, severity_level || 'low']
     );
-    res.json({ message: 'Behavior added successfully.' });
+    // ดึงข้อมูลที่เพิ่มใหม่เพื่อส่งกลับ
+    const [newBehavior] = await db.execute('SELECT * FROM behaviors WHERE id = ?', [result.insertId]);
+    res.json(newBehavior[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// API: Update behavior
+app.patch('/api/behaviors/:id', async (req, res) => {
+  const { id } = req.params;
+  const { behavior_name, description, severity_level } = req.body;
+  if (!behavior_name) {
+    return res.status(400).json({ message: 'behavior_name is required.' });
+  }
+  try {
+    // ตรวจสอบว่ามี behavior นี้จริง
+    const [rows] = await db.execute('SELECT * FROM behaviors WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Behavior not found.' });
+    }
+    await db.execute(
+      'UPDATE behaviors SET behavior_name=?, description=?, severity_level=? WHERE id=?',
+      [behavior_name, description || null, severity_level || 'low', id]
+    );
+    res.json({ message: 'Behavior updated successfully.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// API: Delete behavior
+app.delete('/api/behaviors/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    // ตรวจสอบว่ามี behavior นี้จริง
+    const [rows] = await db.execute('SELECT * FROM behaviors WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Behavior not found.' });
+    }
+    // ตรวจสอบว่ามี cases ที่ใช้ behavior นี้อยู่หรือไม่
+    const [cases] = await db.execute('SELECT COUNT(*) as count FROM cases WHERE behavior_id = ?', [id]);
+    if (cases[0].count > 0) {
+      return res.status(400).json({ message: 'Cannot delete behavior that is being used in cases.' });
+    }
+    await db.execute('DELETE FROM behaviors WHERE id = ?', [id]);
+    res.json({ message: 'Behavior deleted successfully.' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error.' });

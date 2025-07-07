@@ -175,6 +175,37 @@ export default function Behaviors() {
       });
   }, []);
 
+  const handleDelete = async (behavior) => {
+    const result = await Swal.fire({
+      title: 'ยืนยันการลบ',
+      text: `คุณต้องการลบพฤติกรรม "${behavior.behavior_name}" หรือไม่?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`https://student-main-behavior-backend.onrender.com/api/behaviors/${behavior.id}`, {
+          method: 'DELETE',
+        });
+        
+        if (!res.ok) {
+          const data = await res.json();
+          Swal.fire('เกิดข้อผิดพลาด', data.message || 'ลบข้อมูลไม่สำเร็จ', 'error');
+        } else {
+          setBehaviors(bh => bh.filter(b => b.id !== behavior.id));
+          Swal.fire('ลบข้อมูลสำเร็จ!', '', 'success');
+        }
+      } catch (err) {
+        Swal.fire('Network error', '', 'error');
+      }
+    }
+  };
+
   return (
     <div style={{
       maxWidth: 1100,
@@ -216,18 +247,59 @@ export default function Behaviors() {
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รายละเอียด</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ระดับความรุนแรง</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>วันที่สร้าง</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>การดำเนินการ</th>
                 </tr>
               </thead>
               <tbody>
                 {behaviors.length === 0 ? (
-                  <tr><td colSpan={5} style={{ textAlign: 'center', padding: 20 }}>ไม่มีข้อมูล</td></tr>
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>ไม่มีข้อมูล</td></tr>
                 ) : behaviors.map((b, i) => (
                   <tr key={b.id}>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{i + 1}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', cursor: 'pointer', color: '#2563eb', fontWeight: 600 }} onClick={() => setEditModal({ open: true, behavior: b })}>{b.behavior_name}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.behavior_name}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.description || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.severity_level}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.created_at ? b.created_at.split('T')[0] : '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                        <button
+                          onClick={() => setEditModal({ open: true, behavior: b })}
+                          style={{
+                            background: '#2563eb',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 6,
+                            padding: '6px 12px',
+                            fontSize: 14,
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'background 0.2s'
+                          }}
+                          onMouseOver={(e) => e.target.style.background = '#1d4ed8'}
+                          onMouseOut={(e) => e.target.style.background = '#2563eb'}
+                        >
+                          แก้ไข
+                        </button>
+                        <button
+                          onClick={() => handleDelete(b)}
+                          style={{
+                            background: '#dc2626',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 6,
+                            padding: '6px 12px',
+                            fontSize: 14,
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'background 0.2s'
+                          }}
+                          onMouseOver={(e) => e.target.style.background = '#b91c1c'}
+                          onMouseOut={(e) => e.target.style.background = '#dc2626'}
+                        >
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

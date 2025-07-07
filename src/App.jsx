@@ -9,7 +9,6 @@ import Students from './pages/students'
 import Admins from './pages/admins'
 import Menu from './components/menu'
 
-
 function App() {
   return (
     <Router>
@@ -43,7 +42,6 @@ function AppContent() {
           <Route path="/cases" element={<Cases />} />
           <Route path="/students" element={<Students />} />
           <Route path="/admins" element={<Admins />} />
-
         </Routes>
       </main>
       <style>{`
