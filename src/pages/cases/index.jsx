@@ -87,11 +87,19 @@ export default function Cases() {
     });
     if (result.isConfirmed) {
       try {
-        await fetch(`https://student-main-behavior-backend.onrender.com/api/cases/${id}`, { method: 'DELETE' });
-        setCases(cases => cases.filter(c => c.id !== id));
-        Swal.fire('ลบสำเร็จ!', 'เคสถูกลบแล้ว', 'success');
-      } catch {
-        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบเคสได้', 'error');
+        const res = await fetch(`https://student-main-behavior-backend.onrender.com/api/cases/${id}`, { 
+          method: 'DELETE' 
+        });
+        
+        if (!res.ok) {
+          const data = await res.json();
+          Swal.fire('เกิดข้อผิดพลาด', data.message || 'ไม่สามารถลบเคสได้', 'error');
+        } else {
+          setCases(cases => cases.filter(c => c.id !== id));
+          Swal.fire('ลบสำเร็จ!', 'เคสถูกลบแล้ว', 'success');
+        }
+      } catch (err) {
+        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
       }
     }
   };
@@ -109,12 +117,16 @@ export default function Cases() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updated),
       });
-      if (!res.ok) throw new Error();
-      setCases(cases => cases.map(c => c.id === updated.id ? { ...c, ...updated } : c));
-      setEditCase(null);
-      Swal.fire('บันทึกสำเร็จ', '', 'success');
-    } catch {
-      Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+      if (!res.ok) {
+        const data = await res.json();
+        Swal.fire('เกิดข้อผิดพลาด', data.message || 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+      } else {
+        setCases(cases => cases.map(c => c.id === updated.id ? { ...c, ...updated } : c));
+        setEditCase(null);
+        Swal.fire('บันทึกสำเร็จ', '', 'success');
+      }
+    } catch (err) {
+      Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
     }
   };
 
@@ -126,13 +138,17 @@ export default function Cases() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCase),
       });
-      if (!res.ok) throw new Error();
-      const created = await res.json();
-      setCases(cases => [created, ...cases]);
-      setAddModalOpen(false);
-      Swal.fire('เพิ่มเคสสำเร็จ', '', 'success');
-    } catch {
-      Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มเคสได้', 'error');
+      if (!res.ok) {
+        const data = await res.json();
+        Swal.fire('เกิดข้อผิดพลาด', data.message || 'ไม่สามารถเพิ่มเคสได้', 'error');
+      } else {
+        const created = await res.json();
+        setCases(cases => [created, ...cases]);
+        setAddModalOpen(false);
+        Swal.fire('เพิ่มเคสสำเร็จ', '', 'success');
+      }
+    } catch (err) {
+      Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
     }
   };
 

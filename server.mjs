@@ -232,11 +232,59 @@ app.post('/api/cases', async (req, res) => {
     return res.status(400).json({ message: 'student_id, behavior_id, and reported_by are required.' });
   }
   try {
-    await db.execute(
+    const [result] = await db.execute(
       'INSERT INTO cases (student_id, behavior_id, reported_by, case_title, case_description, status) VALUES (?, ?, ?, ?, ?, ?)',
       [student_id, behavior_id, reported_by, case_title || null, case_description || null, status || 'open']
     );
-    res.json({ message: 'Case added successfully.' });
+    // ดึงข้อมูลที่เพิ่มใหม่เพื่อส่งกลับ
+    const [newCase] = await db.execute(`
+      SELECT cases.*, s.first_name, s.last_name, s.class_level, s.class_room, b.behavior_name, a.full_name as reporter_name 
+      FROM cases 
+      LEFT JOIN students s ON cases.student_id = s.id
+      LEFT JOIN behaviors b ON cases.behavior_id = b.id
+      LEFT JOIN admins a ON cases.reported_by = a.id
+      WHERE cases.id = ?
+    `, [result.insertId]);
+    res.json(newCase[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// API: Update case
+app.patch('/api/cases/:id', async (req, res) => {
+  const { id } = req.params;
+  const { case_title, case_description, status } = req.body;
+  try {
+    // ตรวจสอบว่ามี case นี้จริง
+    const [rows] = await db.execute('SELECT * FROM cases WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Case not found.' });
+    }
+    await db.execute(
+      'UPDATE cases SET case_title=?, case_description=?, status=? WHERE id=?',
+      [case_title || null, case_description || null, status || 'open', id]
+    );
+    res.json({ message: 'Case updated successfully.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// API: Delete case
+app.delete('/api/cases/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    // ตรวจสอบว่ามี case นี้จริง
+    const [rows] = await db.execute('SELECT * FROM cases WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Case not found.' });
+    }
+    // ลบ case และ attachments ที่เกี่ยวข้อง (CASCADE จะจัดการให้)
+    await db.execute('DELETE FROM cases WHERE id = ?', [id]);
+    res.json({ message: 'Case deleted successfully.' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error.' });
