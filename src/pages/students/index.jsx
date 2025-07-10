@@ -458,6 +458,76 @@ export default function Students() {
           --card-bg: #1e293b;
           --table-head: #334155;
         }
+        /* Responsive styles */
+        @media (max-width: 900px) {
+          .custom-datepicker-input {
+            font-size: 15px !important;
+          }
+          table {
+            font-size: 14px !important;
+          }
+          h2 {
+            font-size: 24px !important;
+          }
+          form {
+            padding: 18px !important;
+            min-width: 0 !important;
+            max-width: 98vw !important;
+          }
+        }
+        @media (max-width: 600px) {
+          div[style*='maxWidth: 1200px'] {
+            margin: 60px 0 0 0 !important;
+            padding: 0 !important;
+            min-height: unset !important;
+          }
+          div[style*='maxWidth: 1100px'] {
+            padding: 10px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 8px #2563eb11 !important;
+          }
+          h2 {
+            font-size: 18px !important;
+          }
+          table {
+            font-size: 12px !important;
+          }
+          th, td {
+            padding: 6px !important;
+          }
+          .custom-datepicker-input {
+            font-size: 13px !important;
+            padding: 6px !important;
+          }
+          form {
+            padding: 8px !important;
+            min-width: 0 !important;
+            max-width: 98vw !important;
+          }
+          input, select, button {
+            font-size: 14px !important;
+            padding: 7px !important;
+          }
+          /* Modal overlay */
+          div[style*='position: fixed'][style*='zIndex: 9999'] {
+            align-items: flex-start !important;
+            padding-top: 18vw !important;
+          }
+        }
+        @media (max-width: 480px) {
+          th, td {
+            padding: 3px !important;
+          }
+          .custom-datepicker-input {
+            font-size: 12px !important;
+            padding: 5px !important;
+          }
+          form {
+            padding: 4px !important;
+            min-width: 0 !important;
+            max-width: 99vw !important;
+          }
+        }
       `}</style>
     </div>
   );
