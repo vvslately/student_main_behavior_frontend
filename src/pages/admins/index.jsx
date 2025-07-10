@@ -252,14 +252,14 @@ export default function Admins() {
   };
 
   return (
-    <div style={{
+    <div className="container-admins" style={{
       maxWidth: 1100,
       margin: '80px auto',
       marginLeft: 50,
       padding: 0,
       background: 'transparent',
     }}>
-      <div style={{
+      <div className="card-admins" style={{
         width: '100%',
         background: 'var(--card-bg, #fff)',
         borderRadius: 18,
@@ -268,8 +268,11 @@ export default function Admins() {
         border: '1px solid #e5e7eb',
         position: 'relative',
         transition: 'box-shadow 0.3s',
+        marginTop: 50,
+        maxWidth: 1100,
+        margin: '0 0',
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
           <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0 }}>จัดการผู้ใช้</h2>
           <button
             onClick={() => setAddModalOpen(true)}
@@ -414,6 +417,39 @@ export default function Admins() {
           --primary: #60a5fa;
           --card-bg: #1e293b;
           --table-head: #334155;
+        }
+        @media (max-width: 900px) {
+          .container-admins {
+            margin-left: 0 !important;
+            padding: 0 8px !important;
+          }
+          .card-admins {
+            padding: 16px !important;
+          }
+          table {
+            font-size: 14px !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .container-admins {
+            margin: 32px 0 0 0 !important;
+            padding: 0 2px !important;
+          }
+          .card-admins {
+            padding: 6px !important;
+            border-radius: 10px !important;
+            margin-top: 70px !important;
+          }
+          table {
+            font-size: 12px !important;
+            min-width: 400px !important;
+          }
+          th, td {
+            padding: 6px !important;
+          }
+          h2 {
+            font-size: 22px !important;
+          }
         }
       `}</style>
     </div>

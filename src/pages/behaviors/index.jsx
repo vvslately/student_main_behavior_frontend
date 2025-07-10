@@ -207,14 +207,19 @@ export default function Behaviors() {
   };
 
   return (
-    <div style={{
+    <div className="container-behaviors" style={{
       maxWidth: 1100,
       margin: '80px auto',
       marginLeft: 50,
       padding: 0,
       background: 'transparent',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      minHeight: 'calc(100vh - 80px)',
+
     }}>
-      <div style={{
+      <div className="card-behaviors" style={{
         width: '100%',
         background: 'var(--card-bg, #fff)',
         borderRadius: 18,
@@ -223,9 +228,13 @@ export default function Behaviors() {
         border: '1px solid #e5e7eb',
         position: 'relative',
         transition: 'box-shadow 0.3s',
+        maxWidth: 1100,
+        
+
+        margin: '0 0',
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0 }}>จัดการพฤติกรรม</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 } }>
+          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0  }}>จัดการพฤติกรรม</h2>
           <button
             onClick={() => setAddModalOpen(true)}
             style={{ background: '#2563eb', color: '#fff', padding: '10px 26px', borderRadius: 10, fontWeight: 700, fontSize: 18, boxShadow: '0 2px 8px #2563eb22', transition: 'background 0.2s', border: 'none', cursor: 'pointer' }}
@@ -239,7 +248,7 @@ export default function Behaviors() {
           <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s', minWidth: 600 }}>
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>#</th>
@@ -261,7 +270,7 @@ export default function Behaviors() {
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.severity_level}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.created_at ? b.created_at.split('T')[0] : '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
                           onClick={() => setEditModal({ open: true, behavior: b })}
                           style={{
@@ -355,6 +364,39 @@ export default function Behaviors() {
           --primary: #60a5fa;
           --card-bg: #1e293b;
           --table-head: #334155;
+        }
+        @media (max-width: 900px) {
+          .container-behaviors {
+            margin-left: 0 !important;
+            padding: 0 8px !important;
+          }
+          .card-behaviors {
+            padding: 16px !important;
+          }
+          table {
+            font-size: 14px !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .container-behaviors {
+            margin: 32px 0 0 0 !important;
+            padding: 0 2px !important;
+          }
+          .card-behaviors {
+            padding: 6px !important;
+            border-radius: 10px !important;
+            margin-top: 70px !important;
+          }
+          table {
+            font-size: 12px !important;
+            min-width: 400px !important;
+          }
+          th, td {
+            padding: 6px !important;
+          }
+          h2 {
+            font-size: 22px !important;
+          }
         }
       `}</style>
     </div>
