@@ -36,7 +36,7 @@ export default function Home() {
 
   return (
     <>
-      <Menu />
+      {/* <Menu /> ลบออกเพื่อไม่ให้เมนูแสดงซ้ำ */}
       <div style={{
         maxWidth: 1200,
         margin: '80px auto',
@@ -48,7 +48,7 @@ export default function Home() {
         display: 'flex',
         flexDirection: 'column',
         gap: 40,
-      }}>
+      }} className="home-container-responsive">
         <div>
           <h2 style={{ marginBottom: 24 }}>สถิติภาพรวม</h2>
           {loading ? (
@@ -60,7 +60,7 @@ export default function Home() {
           ) : error ? (
             <div style={{ color: 'red' }}>{error}</div>
           ) : stats ? (
-            <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }} className="stat-row-responsive">
               <StatCard label="นักเรียนทั้งหมด" value={stats.students} color="#2563eb" />
               <StatCard label="ผู้ใช้ (Admin/Teacher/Counselor)" value={stats.admins} color="#f59e42" />
               <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
@@ -77,7 +77,7 @@ export default function Home() {
               ))}
             </div>
           ) : recentCases && recentCases.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }} className="case-col-responsive">
               {recentCases.map((c, i) => (
                 <CaseCard key={c.id || i} caseData={c} />
               ))}
@@ -87,6 +87,40 @@ export default function Home() {
           )}
         </div>
       </div>
+      <style>{`
+        @keyframes skeleton-loading {
+          0% { opacity: 0.7; }
+          50% { opacity: 1; }
+          100% { opacity: 0.7; }
+        }
+        @media (max-width: 700px) {
+          .home-container-responsive {
+            max-width: 100vw !important;
+            margin: 70px 0 0 0 !important;
+            padding: 10px 2vw 20px 2vw !important;
+            border-radius: 0 !important;
+            border: none !important;
+            gap: 24px !important;
+          }
+          .stat-row-responsive {
+            flex-direction: column !important;
+            gap: 14px !important;
+          }
+          .case-col-responsive {
+            gap: 10px !important;
+          }
+          .stat-row-responsive > div, .case-col-responsive > div {
+            min-width: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 18px 10px !important;
+          }
+          h2 {
+            font-size: 1.1rem !important;
+            margin-bottom: 12px !important;
+          }
+        }
+      `}</style>
     </>
   )
 }

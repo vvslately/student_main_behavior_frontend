@@ -220,8 +220,8 @@ export default function Cases() {
         ) : error ? (
           <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
-          <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }}>
+          <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }} className="cases-table-scroll">
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }} className="cases-table-responsive">
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
@@ -266,16 +266,21 @@ export default function Cases() {
                           marginRight: 8,
                           background: 'none',
                           border: 'none',
-                          padding: 4,
-                          borderRadius: 6,
+                          padding: 6,
+                          borderRadius: 8,
                           cursor: 'pointer',
                           verticalAlign: 'middle',
                           transition: 'background 0.18s',
+                          width: 36,
+                          height: 36,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                         onMouseEnter={e => e.currentTarget.style.background = '#f59e4222'}
                         onMouseLeave={e => e.currentTarget.style.background = 'none'}
                       >
-                        <EditIcon size={20} />
+                        <EditIcon size={28} />
                       </button>
                       <button
                         onClick={() => handleDelete(c.id)}
@@ -283,16 +288,21 @@ export default function Cases() {
                         style={{
                           background: 'none',
                           border: 'none',
-                          padding: 4,
-                          borderRadius: 6,
+                          padding: 6,
+                          borderRadius: 8,
                           cursor: 'pointer',
                           verticalAlign: 'middle',
                           transition: 'background 0.18s',
+                          width: 36,
+                          height: 36,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                         onMouseEnter={e => e.currentTarget.style.background = '#ef444422'}
                         onMouseLeave={e => e.currentTarget.style.background = 'none'}
                       >
-                        <DeleteIcon size={20} />
+                        <DeleteIcon size={28} />
                       </button>
                     </td>
                   </tr>
@@ -314,6 +324,36 @@ export default function Cases() {
           --primary: #60a5fa;
           --card-bg: #1e293b;
           --table-head: #334155;
+        }
+        @media (max-width: 700px) {
+          .cases-table-responsive {
+            font-size: 13px !important;
+          }
+          .cases-table-responsive th, .cases-table-responsive td {
+            padding: 7px !important;
+          }
+          .cases-table-responsive button {
+            width: 32px !important;
+            height: 32px !important;
+            padding: 4px !important;
+          }
+          .cases-table-responsive svg {
+            width: 22px !important;
+            height: 22px !important;
+          }
+          input, select, textarea {
+            font-size: 15px !important;
+            padding: 7px !important;
+          }
+          .cases-table-responsive {
+            min-width: 600px;
+          }
+          .cases-table-scroll {
+            overflow-x: auto;
+            width: 100vw;
+            margin-left: -16px;
+            padding-left: 8px;
+          }
         }
       `}</style>
     </div>

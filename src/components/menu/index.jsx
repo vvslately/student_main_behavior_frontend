@@ -59,43 +59,40 @@ export default function Menu() {
             e.currentTarget.style.boxShadow = '0 4px 16px #2563eb44';
           }}
         >
-          <div style={{ width: 32, height: 32, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{
-              position: 'absolute',
-              top: 7,
-              left: 2,
-              width: 28,
-              height: 4,
-              borderRadius: 2,
-              background: '#fff',
-              transition: 'transform 0.32s cubic-bezier(.4,2,.6,1), opacity 0.22s',
-              transform: open ? 'rotate(45deg) translateY(10px)' : 'none',
-              boxShadow: '0 1px 4px #0002',
-            }} />
-            <span style={{
-              position: 'absolute',
-              top: 14,
-              left: 2,
-              width: 28,
-              height: 4,
-              borderRadius: 2,
-              background: '#fff',
-              opacity: open ? 0 : 1,
-              transition: 'opacity 0.22s',
-              boxShadow: '0 1px 4px #0002',
-            }} />
-            <span style={{
-              position: 'absolute',
-              top: 21,
-              left: 2,
-              width: 28,
-              height: 4,
-              borderRadius: 2,
-              background: '#fff',
-              transition: 'transform 0.32s cubic-bezier(.4,2,.6,1), opacity 0.22s',
-              transform: open ? 'rotate(-45deg) translateY(-10px)' : 'none',
-              boxShadow: '0 1px 4px #0002',
-            }} />
+          <div style={{
+            width: 32,
+            height: 32,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            position: 'relative',
+          }}>
+            {[0, 1, 2].map(i => (
+              <span
+                key={i}
+                style={{
+                  display: 'block',
+                  width: 28,
+                  height: 4,
+                  borderRadius: 2,
+                  background: '#fff',
+                  transition: 'all 0.32s cubic-bezier(.4,2,.6,1), opacity 0.22s',
+                  boxShadow: '0 1px 4px #0002',
+                  position: 'relative',
+                  transform:
+                    open
+                      ? i === 0
+                        ? 'translateY(10px) rotate(45deg)'
+                        : i === 1
+                          ? 'scaleX(0)'
+                          : 'translateY(-10px) rotate(-45deg)'
+                      : 'none',
+                  opacity: open && i === 1 ? 0 : 1,
+                }}
+              />
+            ))}
           </div>
         </button>
       )}
@@ -126,7 +123,7 @@ export default function Menu() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px' }}>
-          <span style={{ fontWeight: 800, fontSize: 32, color: '#2563eb', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px #c7d2fe' }}>
+          <span style={{ fontWeight: 800, fontSize: 32, color: '#2563eb', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px #c7d2fe', marginTop: isMobile ? 54 : 0 }}>
             ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
           </span>
         </div>
