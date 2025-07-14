@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import CasePDFDocument from './CasePDFDocument';
+
 
 function exportToCSV(rows) {
   if (!rows.length) return;
@@ -15,6 +20,32 @@ function exportToCSV(rows) {
   a.download = 'cases_export.csv';
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function exportToPDF(rows) {
+  if (!rows.length) return;
+  const doc = new jsPDF();
+  const header = [
+    "ชื่อเคส", "รายละเอียด", "นักเรียน", "ชั้น", "ห้อง", "พฤติกรรม", "ผู้รายงาน", "สถานะ", "วันที่รายงาน"
+  ];
+  const data = rows.map(c => [
+    c.case_title || '-',
+    c.case_description || '-',
+    c.first_name ? `${c.first_name} ${c.last_name}` : '-',
+    c.class_level || '-',
+    c.class_room || '-',
+    c.behavior_name || '-',
+    c.reporter_name || '-',
+    c.status || '-',
+    c.reported_at ? c.reported_at.split('T')[0] : '-'
+  ]);
+  doc.autoTable({
+    head: [header],
+    body: data,
+    styles: { fontSize: 12 },
+    headStyles: { fillColor: [37, 99, 235] }
+  });
+  doc.save('cases_export.pdf');
 }
 
 const EditIcon = ({size=20}) => (
@@ -214,6 +245,19 @@ export default function Cases() {
           >
             Export CSV
           </button>
+          <PDFDownloadLink
+            document={<CasePDFDocument rows={filteredCases.filter(c => selected.includes(c.id))} />}
+            fileName="cases_export.pdf"
+          >
+            {({ loading }) => (
+              <button
+                disabled={!selected.length}
+                style={{ background: selected.length ? '#ef4444' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontWeight: 700, fontSize: 16, boxShadow: selected.length ? '0 2px 8px #ef444433' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s' }}
+              >
+                {loading ? 'กำลังสร้าง PDF...' : 'Export PDF'}
+              </button>
+            )}
+          </PDFDownloadLink>
         </div>
         {loading ? (
           <SkeletonTable />

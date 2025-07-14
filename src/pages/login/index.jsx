@@ -42,6 +42,12 @@ export default function Login() {
 
   return (
     <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' , marginTop: '250px'}}>
+      <div style={{ textAlign: 'center', color: '#334155', marginBottom: 8, fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
+        ระบบจัดการพฤติกรรมนักเรียน
+      </div>
+      <div style={{ textAlign: 'center', color: '#334155', marginBottom: 20, fontSize: 20 }}>
+        โรงเรียนวชิรธรรมสาธิต
+      </div>
       <h2 style={{ marginBottom: 24, color: '#ff69b4', textAlign: 'center', fontWeight: 700 }}>เข้าสู่ระบบ</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: 16 }}>

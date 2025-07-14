@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Menu from '../../components/menu';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -34,6 +35,13 @@ export default function Home() {
     }
   }, [navigate]);
 
+  // เตรียมข้อมูลสำหรับกราฟแท่ง
+  const barData = stats ? [
+    { name: 'นักเรียน', value: stats.students },
+    { name: 'ผู้ใช้', value: stats.admins },
+    { name: 'เคส', value: stats.cases },
+  ] : [];
+
   return (
     <>
       {/* <Menu /> ลบออกเพื่อไม่ให้เมนูแสดงซ้ำ */}
@@ -60,12 +68,26 @@ export default function Home() {
           ) : error ? (
             <div style={{ color: 'red' }}>{error}</div>
           ) : stats ? (
-            <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }} className="stat-row-responsive">
-              <StatCard label="นักเรียนทั้งหมด" value={stats.students} color="#2563eb" />
-              <StatCard label="ผู้ใช้ (Admin/Teacher/Counselor)" value={stats.admins} color="#f59e42" />
-              <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
-              <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
-            </div>
+            <>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }} className="stat-row-responsive">
+                <StatCard label="นักเรียนทั้งหมด" value={stats.students} color="#2563eb" />
+                <StatCard label="ผู้ใช้ (Admin/Teacher/Counselor)" value={stats.admins} color="#f59e42" />
+                <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
+                <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
+              </div>
+              {/* กราฟแท่งสถิติภาพรวม */}
+              <div style={{ width: '100%', height: 300, marginTop: 32 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={barData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis allowDecimals={false} />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#2563eb" radius={[8, 8, 0, 0]} isAnimationActive={true} animationDuration={1200} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </>
           ) : null}
         </div>
         <div>
