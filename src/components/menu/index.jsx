@@ -4,10 +4,10 @@ import Swal from 'sweetalert2';
 
 const menuItems = [
   { to: '/home', label: 'หน้าแรก' },
-  { to: '/behaviors', label: 'จัดการพฤติกรรม' },
-  { to: '/cases', label: 'จัดการเคส/เหตุการณ์' },
+  { to: '/behaviors', label: 'จัดการพฤติกรรมนักเรียน' },
+  { to: '/cases', label: 'บันทึกเคส/เหตุการณ์' },
   { to: '/students', label: 'จัดการนักเรียน' },
-  { to: '/admins', label: 'จัดการผู้ใช้ ' },
+  { to: '/admins', label: 'จัดการผู้ใช้งาน' },
 ];
 
 export default function Menu() {
@@ -40,7 +40,7 @@ export default function Menu() {
             width: 54,
             height: 54,
             border: 'none',
-            background: 'rgba(37,99,235,0.97)',
+            background: 'linear-gradient(90deg, #ff69b4 0%, #ffb6c1 100%)',
             borderRadius: '50%',
             boxShadow: '0 4px 16px #2563eb44',
             display: 'flex',
@@ -52,7 +52,7 @@ export default function Menu() {
           }}
           onMouseEnter={e => {
             e.currentTarget.style.transform = 'scale(1.08)';
-            e.currentTarget.style.boxShadow = '0 8px 32px #2563eb33';
+            e.currentTarget.style.boxShadow = '0 8px 32px #f8bbd044';
           }}
           onMouseLeave={e => {
             e.currentTarget.style.transform = 'scale(1)';
@@ -77,9 +77,9 @@ export default function Menu() {
                   width: 28,
                   height: 4,
                   borderRadius: 2,
-                  background: '#fff',
+                  background: '#ff69b4',
                   transition: 'all 0.32s cubic-bezier(.4,2,.6,1), opacity 0.22s',
-                  boxShadow: '0 1px 4px #0002',
+                  boxShadow: '0 1px 4px #ffb6c1',
                   position: 'relative',
                   transform:
                     open
@@ -123,7 +123,7 @@ export default function Menu() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px' }}>
-          <span style={{ fontWeight: 800, fontSize: 32, color: '#2563eb', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px #c7d2fe', marginTop: isMobile ? 54 : 0 }}>
+          <span style={{ fontWeight: 800, fontSize: 32, color: '#ffb3d9', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px #ffe0ef', marginTop: isMobile ? 54 : 0 }}>
             ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
           </span>
         </div>
@@ -143,6 +143,7 @@ export default function Menu() {
             ))}
           </ul>
         </nav>
+        {/* Logout button moved after nav and set to bottom with marginTop: 'auto' */}
         <button
           onClick={async () => {
             const result = await Swal.fire({
@@ -165,8 +166,8 @@ export default function Menu() {
             width: '90%',
             margin: '24px auto 0 auto',
             padding: '12px 0',
-            background: '#e0e7ff',
-            color: '#334155',
+            background: 'linear-gradient(90deg, #ff69b4 0%, #ffb6c1 100%)',
+            color: '#fff',
             border: 'none',
             borderRadius: 8,
             fontWeight: 600,
@@ -175,6 +176,7 @@ export default function Menu() {
             boxShadow: '0 2px 8px 0 #cbd5e1',
             transition: 'background 0.2s, color 0.2s',
             display: 'block',
+            marginTop: 'auto', // This makes the button stick to the bottom
           }}
         >
           ออกจากระบบ
@@ -258,8 +260,8 @@ function MenuLink({ to, active, children, delay, onClick }) {
           width: 6,
           height: 38,
           borderRadius: 6,
-          background: active ? 'linear-gradient(180deg, #2563eb 60%, #60a5fa 100%)' : 'transparent',
-          boxShadow: active ? '0 2px 8px 0 rgba(37,99,235,0.13)' : undefined,
+          background: active ? 'linear-gradient(180deg,#ffb3d9 60%,#ffe0ef 100%)' : 'transparent',
+          boxShadow: active ? '0 2px 8px 0 #ffe0ef' : undefined,
           transition: 'all 0.32s cubic-bezier(.4,2,.6,1)',
           opacity: active ? 1 : 0,
         }}
@@ -269,13 +271,19 @@ function MenuLink({ to, active, children, delay, onClick }) {
         to={to}
         onClick={onClick}
         style={{
-          display: 'block',
-          padding: '14px 32px 14px 28px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minWidth: 0,
+          width: '100%',
+          minHeight: 56,
+          height: 56,
+          padding: '0 32px 0 28px',
           borderRadius: 12,
           fontSize: 20,
           color: active ? '#fff' : '#1e293b',
           background: active
-            ? 'linear-gradient(90deg, #2563eb 80%, #60a5fa 100%)'
+            ? 'linear-gradient(90deg,#ffb3d9 80%,#ffe0ef 100%)'
             : 'rgba(255,255,255,0.7)',
           fontWeight: active ? 700 : 500,
           textDecoration: 'none',
@@ -294,17 +302,17 @@ function MenuLink({ to, active, children, delay, onClick }) {
         onMouseEnter={e => {
           e.currentTarget.style.transform = 'scale(1.045)';
           e.currentTarget.style.background = active
-            ? 'linear-gradient(90deg, #2563eb 80%, #60a5fa 100%)'
+            ? 'linear-gradient(90deg,#ffb3d9 80%,#ffe0ef 100%)'
             : 'linear-gradient(90deg, #e0e7ff 60%, #f1f5f9 100%)';
-          e.currentTarget.style.boxShadow = '0 6px 24px 0 rgba(37,99,235,0.13)';
+          e.currentTarget.style.boxShadow = '0 6px 24px 0 #ffe0ef';
         }}
         onMouseLeave={e => {
           e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.background = active
-            ? 'linear-gradient(90deg, #2563eb 80%, #60a5fa 100%)'
+            ? 'linear-gradient(90deg,#ffb3d9 80%,#ffe0ef 100%)'
             : 'rgba(255,255,255,0.7)';
           e.currentTarget.style.boxShadow = active
-            ? '0 4px 16px 0 rgba(37,99,235,0.13)'
+            ? '0 4px 16px 0 #ffe0ef'
             : '0 1px 4px 0 rgba(30,41,59,0.04)';
         }}
       >

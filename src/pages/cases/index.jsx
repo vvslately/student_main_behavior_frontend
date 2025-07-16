@@ -233,7 +233,7 @@ export default function Cases() {
           />
           <input
             type="text"
-            placeholder="ค้นหาห้อง (เช่น 1/2)"
+            placeholder="ค้นหา ชั้น / ห้อง"
             value={searchRoom}
             onChange={e => setSearchRoom(e.target.value)}
             style={{ padding: 10, borderRadius: 8, border: '1px solid #cbd5e1', minWidth: 120, fontSize: 16 }}
@@ -300,7 +300,15 @@ export default function Cases() {
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.class_room || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_name || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.reporter_name || '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.status}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
+                      {c.status === 'open' ? (
+                        <span style={{ color: '#10b981', fontWeight: 700 }}>ดำเนินการแล้ว</span>
+                      ) : c.status === 'in_progress' ? (
+                        <span style={{ color: '#f59e42', fontWeight: 700 }}>กำลังดำเนินการ</span> 
+                      ) : c.status === 'closed' ? (
+                        <span style={{ color: '#ef4444', fontWeight: 700 }}>ละทิ้ง</span>
+                      ) : c.status}
+                    </td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.reported_at ? c.reported_at.split('T')[0] : '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', minWidth: 80 }}>
                       <button
