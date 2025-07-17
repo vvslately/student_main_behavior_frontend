@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Menu from '../../components/menu';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Legend } from 'recharts';
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -36,11 +38,11 @@ export default function Home() {
   }, [navigate]);
 
   // เตรียมข้อมูลสำหรับกราฟแท่ง
-  const barData = stats ? [
+  const pieData = stats ? [
     { name: 'นักเรียน', value: stats.students },
-    { name: 'ผู้ใช้', value: stats.admins },
     { name: 'เคส', value: stats.cases },
   ] : [];
+  const pieColors = ['#ff69b4', '#fbcfe8'];
 
   return (
     <>
@@ -58,7 +60,7 @@ export default function Home() {
         gap: 40,
       }} className="home-container-responsive">
         <div>
-          <h2 style={{ marginBottom: 24 }}>สถิติภาพรวม</h2>
+          <h2 style={{ marginBottom: 24, color: 'var(--color-text-primary)' }}>สถิติภาพรวม</h2>
           {loading ? (
             <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
               {[...Array(4)].map((_, i) => (
@@ -76,22 +78,31 @@ export default function Home() {
                 <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
               </div>
               {/* กราฟแท่งสถิติภาพรวม */}
-              <div style={{ width: '100%', height: 300, marginTop: 32 }}>
+              <div style={{ width: '100%', minHeight: 260, height: '32vw', maxHeight: 400, marginTop: 32, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={barData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis allowDecimals={false} />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#2563eb" radius={[8, 8, 0, 0]} isAnimationActive={true} animationDuration={1200} />
-                  </BarChart>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius="80%"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {pieData.map((entry, idx) => (
+                        <Cell key={`cell-${idx}`} fill={pieColors[idx % pieColors.length]} />
+                      ))}
+                    </Pie>
+                    <Legend />
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
             </>
           ) : null}
         </div>
         <div>
-          <h2 style={{ marginBottom: 24 }}>เคสล่าสุด</h2>
+          <h2 style={{ marginBottom: 24, color: 'var(--color-text-primary)' }}>เคสล่าสุด</h2>
           {loadingCases ? (
             <div>
               {[...Array(5)].map((_, i) => (
@@ -137,6 +148,11 @@ export default function Home() {
             box-sizing: border-box !important;
             padding: 18px 10px !important;
           }
+          .home-container-responsive .recharts-responsive-container {
+            min-height: 220px !important;
+            height: 48vw !important;
+            max-height: 320px !important;
+          }
           h2 {
             font-size: 1.1rem !important;
             margin-bottom: 12px !important;
@@ -150,8 +166,8 @@ export default function Home() {
 function StatCard({ label, value, color }) {
   return (
     <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 28, display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 120 }}>
-      <div style={{ fontSize: 36, fontWeight: 800, color }}>{value}</div>
-      <div style={{ fontSize: 18, color: '#334155', marginTop: 8, textAlign: 'center' }}>{label}</div>
+      <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--color-text-primary)' }}>{value}</div>
+      <div style={{ fontSize: 18, color: 'var(--color-text-primary)', marginTop: 8, textAlign: 'center' }}>{label}</div>
     </div>
   );
 }
@@ -175,14 +191,14 @@ function SkeletonStatCard() {
 function CaseCard({ caseData }) {
   return (
     <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 6px #e0e7ef33', padding: 18, display: 'flex', flexDirection: 'column', minHeight: 60 }}>
-      <div style={{ fontWeight: 700, fontSize: 18, color: '#2563eb', marginBottom: 4 }}>{caseData.case_title || '-'}</div>
-      <div style={{ fontSize: 15, color: '#334155', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      <div style={{ fontWeight: 700, fontSize: 18, color: 'var(--color-text-primary)', marginBottom: 4 }}>{caseData.case_title || '-'}</div>
+      <div style={{ fontSize: 15, color: 'var(--color-text-primary)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {caseData.case_description || '-'}
       </div>
-      <div style={{ fontSize: 14, color: '#64748b', marginTop: 2 }}>
+      <div style={{ fontSize: 14, color: 'var(--color-text-primary)', marginTop: 2 }}>
         {caseData.first_name ? `${caseData.first_name} ${caseData.last_name}` : '-'} | {caseData.class_level || '-'}{caseData.class_room ? '/' + caseData.class_room : ''} | {caseData.status}
       </div>
-      <div style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
+      <div style={{ fontSize: 13, color: 'var(--color-text-primary)', marginTop: 2 }}>
         {caseData.reported_at ? caseData.reported_at.split('T')[0] : '-'}
       </div>
     </div>

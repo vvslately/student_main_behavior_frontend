@@ -5,18 +5,18 @@ import DatePicker from 'react-datepicker';
 
 const EditIcon = ({size=22}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="#f59e42"/>
+    <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="var(--color-warning, #f59e42)"/>
   </svg>
 );
 
 const DeleteIcon = ({size=22}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="9" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="13" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="3" y="4" width="14" height="2" rx="1" fill="#ef4444"/>
-    <rect x="7" y="2" width="6" height="2" rx="1" fill="#ef4444"/>
-    <rect x="4" y="6" width="12" height="2" rx="1" fill="#ef4444"/>
+    <rect x="5" y="8" width="2" height="7" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="9" y="8" width="2" height="7" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="13" y="8" width="2" height="7" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="3" y="4" width="14" height="2" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="7" y="2" width="6" height="2" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="4" y="6" width="12" height="2" rx="1" fill="var(--color-status-error, #ef4444)"/>
   </svg>
 );
 
@@ -101,22 +101,22 @@ function AddStudentModal({ onClose, onSave }) {
       <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>เพิ่มนักเรียนใหม่</h3>
         <div>
-          <label>รหัสนักเรียน <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>รหัสนักเรียน <span style={{ color: 'red' }}>*</span></label>
           <input name="student_code" type="text" value={form.student_code} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label>ชื่อ <span style={{ color: 'red' }}>*</span></label>
+            <label style={{ color: '#222' }}>ชื่อ <span style={{ color: 'red' }}>*</span></label>
             <input name="first_name" type="text" value={form.first_name} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label>นามสกุล <span style={{ color: 'red' }}>*</span></label>
+            <label style={{ color: '#222' }}>นามสกุล <span style={{ color: 'red' }}>*</span></label>
             <input name="last_name" type="text" value={form.last_name} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label>เพศ</label>
+            <label style={{ color: '#222' }}>เพศ</label>
             <select name="gender" value={form.gender} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
               <option value="male">ชาย</option>
               <option value="female">หญิง</option>
@@ -124,26 +124,26 @@ function AddStudentModal({ onClose, onSave }) {
             </select>
           </div>
           <div style={{ flex: 1 }}>
-            <label>ชั้นเรียน</label>
+            <label style={{ color: '#222' }}>ชั้นเรียน</label>
             <input name="class_level" type="text" value={form.class_level} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label>ห้อง</label>
+            <label style={{ color: '#222' }}>ห้อง</label>
             <input name="class_room" type="text" value={form.class_room} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label>ชื่อผู้ปกครอง</label>
+            <label style={{ color: '#222' }}>ชื่อผู้ปกครอง</label>
             <input name="guardian_name" type="text" value={form.guardian_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label>ข้อมูลติดต่อ</label>
+            <label style={{ color: '#222' }}>ข้อมูลติดต่อ</label>
             <input name="contact_info" type="text" value={form.contact_info} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
         </div>
         <div>
-          <label style={{ display: 'block', marginBottom: 4 }}>วันเกิด</label>
+          <label style={{ color: '#222', display: 'block', marginBottom: 4 }}>วันเกิด</label>
           <DatePicker
             selected={form.birthdate ? new Date(form.birthdate) : null}
             onChange={date => setForm(f => ({ ...f, birthdate: date ? date.toISOString().slice(0, 10) : '' }))}
@@ -313,10 +313,10 @@ export default function Students() {
         transition: 'box-shadow 0.3s',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0 }}>จัดการนักเรียน</h2>
+          <h2 style={{ color: 'var(--color-primary)', fontWeight: 800, fontSize: 32, letterSpacing: 1, margin: 0 , color:'#222'}}>จัดการนักเรียน</h2>
           <button
             onClick={() => setAddModalOpen(true)}
-            style={{ background: '#2563eb', color: '#fff', padding: '10px 26px', borderRadius: 10, fontWeight: 700, fontSize: 18, boxShadow: '0 2px 8px #2563eb22', transition: 'background 0.2s', border: 'none', cursor: 'pointer' }}
+            style={{ background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', padding: '8px 16px', borderRadius: 10, fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px var(--color-primary, #2563eb22)', transition: 'background 0.2s', border: 'none', cursor: 'pointer', width: '100%', maxWidth: 200 }}
           >
             + เพิ่มนักเรียน
           </button>
@@ -485,22 +485,22 @@ function EditStudentModal({ studentData, onClose, onSave }) {
       <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>แก้ไขข้อมูลนักเรียน</h3>
         <div>
-          <label>รหัสนักเรียน <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>รหัสนักเรียน <span style={{ color: 'red' }}>*</span></label>
           <input name="student_code" type="text" value={form.student_code} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label>ชื่อ <span style={{ color: 'red' }}>*</span></label>
+            <label style={{ color: '#222' }}>ชื่อ <span style={{ color: 'red' }}>*</span></label>
             <input name="first_name" type="text" value={form.first_name} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label>นามสกุล <span style={{ color: 'red' }}>*</span></label>
+            <label style={{ color: '#222' }}>นามสกุล <span style={{ color: 'red' }}>*</span></label>
             <input name="last_name" type="text" value={form.last_name} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label>เพศ</label>
+            <label style={{ color: '#222' }}>เพศ</label>
             <select name="gender" value={form.gender} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
               <option value="male">ชาย</option>
               <option value="female">หญิง</option>
@@ -508,26 +508,26 @@ function EditStudentModal({ studentData, onClose, onSave }) {
             </select>
           </div>
           <div style={{ flex: 1 }}>
-            <label>ชั้นเรียน</label>
+            <label style={{ color: '#222' }}>ชั้นเรียน</label>
             <input name="class_level" type="text" value={form.class_level} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label>ห้อง</label>
+            <label style={{ color: '#222' }}>ห้อง</label>
             <input name="class_room" type="text" value={form.class_room} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label>ชื่อผู้ปกครอง</label>
+            <label style={{ color: '#222' }}>ชื่อผู้ปกครอง</label>
             <input name="guardian_name" type="text" value={form.guardian_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label>ข้อมูลติดต่อ</label>
+            <label style={{ color: '#222' }}>ข้อมูลติดต่อ</label>
             <input name="contact_info" type="text" value={form.contact_info} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
         </div>
         <div>
-          <label style={{ display: 'block', marginBottom: 4 }}>วันเกิด</label>
+          <label style={{ color: '#222', display: 'block', marginBottom: 4 }}>วันเกิด</label>
           <DatePicker
             selected={form.birthdate ? new Date(form.birthdate) : null}
             onChange={date => setForm(f => ({ ...f, birthdate: date ? date.toISOString().slice(0, 10) : '' }))}
@@ -541,7 +541,7 @@ function EditStudentModal({ studentData, onClose, onSave }) {
           />
         </div>
         <div>
-          <label>วันที่สร้าง</label>
+          <label style={{ color: '#222' }}>วันที่สร้าง</label>
           <input name="created_at" type="text" value={form.created_at ? form.created_at.split('T')[0] : ''} readOnly style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd', background: '#f1f5f9' }} />
         </div>
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>

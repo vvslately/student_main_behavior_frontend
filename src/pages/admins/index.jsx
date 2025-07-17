@@ -5,17 +5,17 @@ import Swal from 'sweetalert2';
 // SVG icons
 const EditIcon = ({size=20}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="#f59e42"/>
+    <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="var(--color-status-warning)"/>
   </svg>
 );
 const DeleteIcon = ({size=20}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="9" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="13" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="3" y="4" width="14" height="2" rx="1" fill="#ef4444"/>
-    <rect x="7" y="2" width="6" height="2" rx="1" fill="#ef4444"/>
-    <rect x="4" y="6" width="12" height="2" rx="1" fill="#ef4444"/>
+    <rect x="5" y="8" width="2" height="7" rx="1" fill="var(--color-status-error)"/>
+    <rect x="9" y="8" width="2" height="7" rx="1" fill="var(--color-status-error)"/>
+    <rect x="13" y="8" width="2" height="7" rx="1" fill="var(--color-status-error)"/>
+    <rect x="3" y="4" width="14" height="2" rx="1" fill="var(--color-status-error)"/>
+    <rect x="7" y="2" width="6" height="2" rx="1" fill="var(--color-status-error)"/>
+    <rect x="4" y="6" width="12" height="2" rx="1" fill="var(--color-status-error)"/>
   </svg>
 );
 
@@ -93,36 +93,36 @@ function AddAdminModal({ onClose, onSave }) {
       position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
       background: 'rgba(30,41,59,0.18)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
-      <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>เพิ่มผู้ใช้ใหม่</h3>
+      <form onSubmit={handleSubmit} style={{ background: 'var(--color-background-primary)', borderRadius: 14, boxShadow: '0 8px 32px var(--color-primary-light)', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: 'var(--color-primary)' }}>เพิ่มผู้ใช้ใหม่</h3>
         <div>
-          <label>Username <span style={{ color: 'red' }}>*</span></label>
-          <input name="username" type="text" value={form.username} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>Username <span style={{ color: 'var(--color-status-error)' }}>*</span></label>
+          <input name="username" type="text" value={form.username} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>Password <span style={{ color: 'red' }}>*</span></label>
-          <input name="password" type="password" value={form.password} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>Password <span style={{ color: 'var(--color-status-error)' }}>*</span></label>
+          <input name="password" type="password" value={form.password} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>ชื่อ-นามสกุล</label>
-          <input name="full_name" type="text" value={form.full_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>ชื่อ-นามสกุล</label>
+          <input name="full_name" type="text" value={form.full_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>Email</label>
-          <input name="email" type="email" value={form.email} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>Email</label>
+          <input name="email" type="email" value={form.email} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>Role</label>
-          <select name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
+          <label style={{ color: 'var(--color-text-primary)' }}>Role</label>
+          <select name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }}>
             <option value="admin">admin</option>
             <option value="teacher">teacher</option>
             <option value="counselor">counselor</option>
           </select>
         </div>
-        {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
+        {error && <div style={{ color: 'var(--color-status-error)', marginBottom: 8 }}>{error}</div>}
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
-          <button type="button" onClick={onClose} style={{ flex: 1, background: '#cbd5e1', color: '#334155', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>ยกเลิก</button>
-          <button type="submit" disabled={loading} style={{ flex: 1, background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 700, fontSize: 16, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? 'กำลังบันทึก...' : 'บันทึก'}</button>
+          <button type="button" onClick={onClose} style={{ flex: 1, background: 'var(--color-border-light)', color: 'var(--color-text-secondary)', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>ยกเลิก</button>
+          <button type="submit" disabled={loading} style={{ flex: 1, background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 700, fontSize: 16, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? 'กำลังบันทึก...' : 'บันทึก'}</button>
         </div>
       </form>
     </div>
@@ -162,36 +162,36 @@ function EditAdminModal({ admin, onClose, onSave }) {
       position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
       background: 'rgba(30,41,59,0.18)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
-      <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>แก้ไขผู้ใช้</h3>
+      <form onSubmit={handleSubmit} style={{ background: 'var(--color-background-primary)', borderRadius: 14, boxShadow: '0 8px 32px var(--color-primary-light)', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: 'var(--color-primary)' }}>แก้ไขผู้ใช้</h3>
         <div>
-          <label>Username <span style={{ color: 'red' }}>*</span></label>
-          <input name="username" type="text" value={form.username} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>Username <span style={{ color: 'var(--color-status-error)' }}>*</span></label>
+          <input name="username" type="text" value={form.username} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>Password (ถ้าไม่เปลี่ยนให้เว้นว่าง)</label>
-          <input name="password" type="password" value={form.password} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>Password (ถ้าไม่เปลี่ยนให้เว้นว่าง)</label>
+          <input name="password" type="password" value={form.password} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>ชื่อ-นามสกุล</label>
-          <input name="full_name" type="text" value={form.full_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>ชื่อ-นามสกุล</label>
+          <input name="full_name" type="text" value={form.full_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>Email</label>
-          <input name="email" type="email" value={form.email} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          <label style={{ color: 'var(--color-text-primary)' }}>Email</label>
+          <input name="email" type="email" value={form.email} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }} />
         </div>
         <div>
-          <label>Role</label>
-          <select name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
+          <label style={{ color: 'var(--color-text-primary)' }}>Role</label>
+          <select name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }}>
             <option value="admin">admin</option>
             <option value="teacher">teacher</option>
             <option value="counselor">counselor</option>
           </select>
         </div>
-        {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
+        {error && <div style={{ color: 'var(--color-status-error)', marginBottom: 8 }}>{error}</div>}
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
-          <button type="button" onClick={onClose} style={{ flex: 1, background: '#cbd5e1', color: '#334155', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>ยกเลิก</button>
-          <button type="submit" disabled={loading} style={{ flex: 1, background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 700, fontSize: 16, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? 'กำลังบันทึก...' : 'บันทึก'}</button>
+          <button type="button" onClick={onClose} style={{ flex: 1, background: 'var(--color-border-light)', color: 'var(--color-text-secondary)', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>ยกเลิก</button>
+          <button type="submit" disabled={loading} style={{ flex: 1, background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 700, fontSize: 16, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? 'กำลังบันทึก...' : 'บันทึก'}</button>
         </div>
       </form>
     </div>
@@ -273,10 +273,10 @@ export default function Admins() {
         margin: '0 0',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0 }}>จัดการผู้ใช้</h2>
+          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--color-primary)', letterSpacing: 1, margin: 0 }}>จัดการผู้ใช้</h2>
           <button
             onClick={() => setAddModalOpen(true)}
-            style={{ background: '#2563eb', color: '#fff', padding: '10px 26px', borderRadius: 10, fontWeight: 700, fontSize: 18, boxShadow: '0 2px 8px #2563eb22', transition: 'background 0.2s', border: 'none', cursor: 'pointer' }}
+            style={{ background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', padding: '8px 16px', borderRadius: 10, fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px var(--color-primary-light)', transition: 'background 0.2s', border: 'none', cursor: 'pointer', width: '100%', maxWidth: 200 }}
           >
             + เพิ่มผู้ใช้
           </button>
@@ -284,10 +284,10 @@ export default function Admins() {
         {loading ? (
           <SkeletonTable />
         ) : error ? (
-          <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
+          <div style={{ color: 'var(--color-status-error)', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s', tableLayout: 'fixed' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px var(--color-primary-light)', transition: 'box-shadow 0.3s', tableLayout: 'fixed' }}>
               <colgroup>
                 <col style={{ width: '4%' }} />
                 <col style={{ width: '16%' }} />
@@ -298,14 +298,14 @@ export default function Admins() {
                 <col style={{ width: '12%' }} />
               </colgroup>
               <thead>
-                <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 60 }}>#</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 100 }}>Username</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 120 }}>ชื่อ-นามสกุล</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 140 }}>Email</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 80 }}>Role</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 100 }}>วันที่สร้าง</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 120 }}>การจัดการ</th>
+                <tr style={{ background: 'var(--color-background-tertiary)', transition: 'background 0.3s' }}>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 60 }}>#</th>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 100 }}>Username</th>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 120 }}>ชื่อ-นามสกุล</th>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 140 }}>Email</th>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 80 }}>Role</th>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 100 }}>วันที่สร้าง</th>
+                  <th style={{ padding: 10, border: '1px solid var(--color-border-light)', minWidth: 120 }}>การจัดการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -313,13 +313,13 @@ export default function Admins() {
                   <tr><td colSpan={7} style={{ textAlign: 'center', padding: 20 }}>ไม่มีข้อมูล</td></tr>
                 ) : admins.map((a, i) => (
                   <tr key={a.id}>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{i + 1}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.username}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.full_name || '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.email || '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.role}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.created_at ? a.created_at.split('T')[0] : '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', minWidth: 120 }}>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{i + 1}</td>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.username}</td>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.full_name || '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.email || '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.role}</td>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.created_at ? a.created_at.split('T')[0] : '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid var(--color-border-light)', textAlign: 'center', minWidth: 120 }}>
                       <button
                         onClick={() => handleEdit(a.id)}
                         title="แก้ไข"
@@ -333,7 +333,7 @@ export default function Admins() {
                           verticalAlign: 'middle',
                           transition: 'background 0.18s',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#f59e4222'}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--color-status-warning, #f59e4222)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'none'}
                       >
                         <EditIcon size={22} />
@@ -350,7 +350,7 @@ export default function Admins() {
                           verticalAlign: 'middle',
                           transition: 'background 0.18s',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#ef444422'}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--color-status-error, #ef444422)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'none'}
                       >
                         <DeleteIcon size={22} />

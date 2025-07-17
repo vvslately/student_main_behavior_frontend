@@ -50,18 +50,18 @@ function exportToPDF(rows) {
 
 const EditIcon = ({size=20}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="#f59e42"/>
+    <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="var(--color-warning, #f59e42)"/>
   </svg>
 );
 
 const DeleteIcon = ({size=20}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="9" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="13" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
-    <rect x="3" y="4" width="14" height="2" rx="1" fill="#ef4444"/>
-    <rect x="7" y="2" width="6" height="2" rx="1" fill="#ef4444"/>
-    <rect x="4" y="6" width="12" height="2" rx="1" fill="#ef4444"/>
+    <rect x="5" y="8" width="2" height="7" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="9" y="8" width="2" height="7" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="13" y="8" width="2" height="7" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="3" y="4" width="14" height="2" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="7" y="2" width="6" height="2" rx="1" fill="var(--color-status-error, #ef4444)"/>
+    <rect x="4" y="6" width="12" height="2" rx="1" fill="var(--color-status-error, #ef4444)"/>
   </svg>
 );
 
@@ -208,10 +208,10 @@ export default function Cases() {
         transition: 'box-shadow 0.3s',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0 }}>จัดการเคส/เหตุการณ์</h2>
+          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #222)', letterSpacing: 1, margin: 0 , color: '#222'}}>จัดการเคส/เหตุการณ์</h2>
           <button
             onClick={() => setAddModalOpen(true)}
-            style={{ background: '#2563eb', color: '#fff', padding: '10px 26px', borderRadius: 10, fontWeight: 700, fontSize: 18, boxShadow: '0 2px 8px #2563eb22', transition: 'background 0.2s', border: 'none', cursor: 'pointer' }}
+            style={{ background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', padding: '8px 16px', borderRadius: 10, fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px var(--color-primary, #2563eb22)', transition: 'background 0.2s', border: 'none', cursor: 'pointer', width: '100%', maxWidth: 200 }}
           >
             + เพิ่มเคส
           </button>
@@ -321,16 +321,12 @@ export default function Cases() {
                           padding: 6,
                           borderRadius: 8,
                           cursor: 'pointer',
-                          verticalAlign: 'middle',
-                          transition: 'background 0.18s',
                           width: 36,
                           height: 36,
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#f59e4222'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'none'}
                       >
                         <EditIcon size={28} />
                       </button>
@@ -343,16 +339,12 @@ export default function Cases() {
                           padding: 6,
                           borderRadius: 8,
                           cursor: 'pointer',
-                          verticalAlign: 'middle',
-                          transition: 'background 0.18s',
                           width: 36,
                           height: 36,
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#ef444422'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'none'}
                       >
                         <DeleteIcon size={28} />
                       </button>
@@ -405,6 +397,12 @@ export default function Cases() {
             width: 100vw;
             margin-left: -16px;
             padding-left: 8px;
+          }
+          .cases-table-responsive +div>button.btn.btn-primary, .cases-table-responsive ~ button.btn.btn-primary, .cases-table-responsive ~ div>button.btn.btn-primary {
+            width: 100% !important;
+            max-width: none !important;
+            display: block !important;
+            margin-bottom: 12px !important;
           }
         }
       `}</style>
@@ -475,13 +473,13 @@ function EditCaseModal({ caseData, onClose, onSave }) {
     }}>
       <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 420, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>แก้ไขเคส</h3>
-        <label>ชื่อเคส
+        <label style={{ color: '#222' }}>ชื่อเคส
           <input name="case_title" value={form.case_title || ''} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4 }} />
         </label>
-        <label>รายละเอียด
+        <label style={{ color: '#222' }}>รายละเอียด
           <textarea name="case_description" value={form.case_description || ''} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4, minHeight: 60 }} />
         </label>
-        <label>สถานะ
+        <label style={{ color: '#222' }}>สถานะ
           <select name="status" value={form.status} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4 }}>
             <option value="open">open</option>
             <option value="in_progress">in_progress</option>
@@ -556,7 +554,7 @@ function AddCaseModal({ onClose, onSave }) {
       <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 420, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>เพิ่มเคส</h3>
         <div>
-          <label>นักเรียน <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>นักเรียน <span style={{ color: 'red' }}>*</span></label>
           <input
             type="text"
             placeholder="ค้นหาด้วยรหัสนักเรียนหรือชื่อ"
@@ -578,7 +576,7 @@ function AddCaseModal({ onClose, onSave }) {
           </select>
         </div>
         <div>
-          <label>พฤติกรรม <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>พฤติกรรม <span style={{ color: 'red' }}>*</span></label>
           <select
             name="behavior_id"
             value={form.behavior_id}
@@ -593,7 +591,7 @@ function AddCaseModal({ onClose, onSave }) {
           </select>
         </div>
         <div>
-          <label>ผู้รายงาน <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>ผู้รายงาน <span style={{ color: 'red' }}>*</span></label>
           <input
             type="text"
             value={reporterName}
@@ -602,7 +600,7 @@ function AddCaseModal({ onClose, onSave }) {
           />
         </div>
         <div>
-          <label>ชื่อเคส</label>
+          <label style={{ color: '#222' }}>ชื่อเคส</label>
           <input
             name="case_title"
             type="text"
@@ -612,7 +610,7 @@ function AddCaseModal({ onClose, onSave }) {
           />
         </div>
         <div>
-          <label>รายละเอียด</label>
+          <label style={{ color: '#222' }}>รายละเอียด</label>
           <textarea
             name="case_description"
             value={form.case_description}
@@ -622,7 +620,7 @@ function AddCaseModal({ onClose, onSave }) {
           />
         </div>
         <div>
-          <label>สถานะ</label>
+          <label style={{ color: '#222' }}>สถานะ</label>
           <select
             name="status"
             value={form.status}

@@ -40,9 +40,9 @@ export default function Menu() {
             width: 54,
             height: 54,
             border: 'none',
-            background: 'linear-gradient(90deg, #ff69b4 0%, #ffb6c1 100%)',
+            background: 'var(--gradient-primary)',
             borderRadius: '50%',
-            boxShadow: '0 4px 16px #2563eb44',
+            boxShadow: '0 4px 16px var(--color-primary-light)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -52,11 +52,11 @@ export default function Menu() {
           }}
           onMouseEnter={e => {
             e.currentTarget.style.transform = 'scale(1.08)';
-            e.currentTarget.style.boxShadow = '0 8px 32px #f8bbd044';
+            e.currentTarget.style.boxShadow = '0 8px 32px var(--color-primary-light)';
           }}
           onMouseLeave={e => {
             e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 16px #2563eb44';
+            e.currentTarget.style.boxShadow = '0 4px 16px var(--color-primary-light)';
           }}
         >
           <div style={{
@@ -77,9 +77,9 @@ export default function Menu() {
                   width: 28,
                   height: 4,
                   borderRadius: 2,
-                  background: '#ff69b4',
+                  background: 'var(--color-primary)',
                   transition: 'all 0.32s cubic-bezier(.4,2,.6,1), opacity 0.22s',
-                  boxShadow: '0 1px 4px #ffb6c1',
+                  boxShadow: '0 1px 4px var(--color-primary-light)',
                   position: 'relative',
                   transform:
                     open
@@ -103,7 +103,7 @@ export default function Menu() {
           minWidth: isMobile ? '0' : 320,
           maxWidth: 400,
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%)',
+          background: 'var(--gradient-background)',
           borderRight: 'none',
           border: 'none',
           padding: isMobile ? '24px 0 24px 0' : '48px 0',
@@ -115,7 +115,7 @@ export default function Menu() {
           flexDirection: 'column',
           gap: 12,
           boxShadow: open
-            ? '4px 0 24px 0 rgba(30,41,59,0.13)'
+            ? '4px 0 24px 0 var(--color-border-light)'
             : 'none',
           fontFamily: 'Prompt, Inter, "Segoe UI", Arial, sans-serif',
           transition: 'left 0.38s cubic-bezier(.4,2,.6,1), box-shadow 0.3s',
@@ -123,7 +123,7 @@ export default function Menu() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px' }}>
-          <span style={{ fontWeight: 800, fontSize: 32, color: '#ffb3d9', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px #ffe0ef', marginTop: isMobile ? 54 : 0 }}>
+          <span style={{ fontWeight: 800, fontSize: 32, color: 'var(--color-primary-light)', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px var(--color-primary-contrast)', marginTop: isMobile ? 54 : 0 }}>
             ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
           </span>
         </div>
@@ -151,8 +151,8 @@ export default function Menu() {
               text: 'คุณต้องการออกจากระบบใช่หรือไม่?',
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonColor: '#2563eb',
-              cancelButtonColor: '#d33',
+              confirmButtonColor: 'var(--color-primary)',
+              cancelButtonColor: 'var(--color-status-error)',
               confirmButtonText: 'ใช่, ออกจากระบบ',
               cancelButtonText: 'ยกเลิก',
             });
@@ -166,14 +166,14 @@ export default function Menu() {
             width: '90%',
             margin: '24px auto 0 auto',
             padding: '12px 0',
-            background: 'linear-gradient(90deg, #ff69b4 0%, #ffb6c1 100%)',
-            color: '#fff',
+            background: 'var(--gradient-primary)',
+            color: 'var(--color-primary-contrast)',
             border: 'none',
             borderRadius: 8,
             fontWeight: 600,
             fontSize: 16,
             cursor: 'pointer',
-            boxShadow: '0 2px 8px 0 #cbd5e1',
+            boxShadow: '0 2px 8px 0 var(--color-border-light)',
             transition: 'background 0.2s, color 0.2s',
             display: 'block',
             marginTop: 'auto', // This makes the button stick to the bottom
@@ -213,7 +213,7 @@ export default function Menu() {
             padding: 24px 0 24px 0 !important;
             position: fixed !important;
             top: 0; left: 0; right: auto;
-            box-shadow: 4px 0 24px 0 rgba(30,41,59,0.13);
+            box-shadow: 4px 0 24px 0 var(--color-border-light);
             z-index: 200;
             overflow-x: hidden;
             transition: left 0.38s cubic-bezier(.4,2,.6,1);
@@ -260,8 +260,8 @@ function MenuLink({ to, active, children, delay, onClick }) {
           width: 6,
           height: 38,
           borderRadius: 6,
-          background: active ? 'linear-gradient(180deg,#ffb3d9 60%,#ffe0ef 100%)' : 'transparent',
-          boxShadow: active ? '0 2px 8px 0 #ffe0ef' : undefined,
+          background: active ? 'var(--gradient-secondary)' : 'transparent',
+          boxShadow: active ? '0 2px 8px 0 var(--color-primary-light)' : undefined,
           transition: 'all 0.32s cubic-bezier(.4,2,.6,1)',
           opacity: active ? 1 : 0,
         }}
@@ -281,16 +281,16 @@ function MenuLink({ to, active, children, delay, onClick }) {
           padding: '0 32px 0 28px',
           borderRadius: 12,
           fontSize: 20,
-          color: active ? '#fff' : '#1e293b',
+          color: active ? 'var(--color-primary-contrast)' : 'var(--color-text-primary)',
           background: active
-            ? 'linear-gradient(90deg,#ffb3d9 80%,#ffe0ef 100%)'
+            ? 'var(--gradient-secondary)'
             : 'rgba(255,255,255,0.7)',
           fontWeight: active ? 700 : 500,
           textDecoration: 'none',
           transition: 'background 0.22s, color 0.22s, transform 0.18s, box-shadow 0.18s',
           boxShadow: active
-            ? '0 4px 16px 0 rgba(37,99,235,0.13)'
-            : '0 1px 4px 0 rgba(30,41,59,0.04)',
+            ? '0 4px 16px 0 var(--color-primary-light)'
+            : '0 1px 4px 0 var(--color-border-light)',
           marginLeft: 8,
           marginRight: 8,
           marginTop: 2,
@@ -302,18 +302,18 @@ function MenuLink({ to, active, children, delay, onClick }) {
         onMouseEnter={e => {
           e.currentTarget.style.transform = 'scale(1.045)';
           e.currentTarget.style.background = active
-            ? 'linear-gradient(90deg,#ffb3d9 80%,#ffe0ef 100%)'
-            : 'linear-gradient(90deg, #e0e7ff 60%, #f1f5f9 100%)';
-          e.currentTarget.style.boxShadow = '0 6px 24px 0 #ffe0ef';
+            ? 'var(--gradient-secondary)'
+            : 'var(--gradient-background)';
+          e.currentTarget.style.boxShadow = '0 6px 24px 0 var(--color-primary-light)';
         }}
         onMouseLeave={e => {
           e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.background = active
-            ? 'linear-gradient(90deg,#ffb3d9 80%,#ffe0ef 100%)'
+            ? 'var(--gradient-secondary)'
             : 'rgba(255,255,255,0.7)';
           e.currentTarget.style.boxShadow = active
-            ? '0 4px 16px 0 #ffe0ef'
-            : '0 1px 4px 0 rgba(30,41,59,0.04)';
+            ? '0 4px 16px 0 var(--color-primary-light)'
+            : '0 1px 4px 0 var(--color-border-light)';
         }}
       >
         {children}

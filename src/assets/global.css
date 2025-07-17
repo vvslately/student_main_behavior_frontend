@@ -8,14 +8,14 @@ body, html, #root {
 :root {
   /* Primary colors - Pink */
   --color-primary: #FF69B4;
-  --color-primary-light: #FFB6C1;
+  --color-primary-light: rgb(255, 188, 255);
   --color-primary-dark: #C71585;
   --color-primary-contrast: #FFFFFF;
   
   /* Secondary colors - Green */
-  --color-secondary: #90EE90;
-  --color-secondary-light: #98FB98;
-  --color-secondary-dark: #228B22;
+  --color-secondary: #ffe3fb;
+  --color-secondary-light: #fb98e5;
+  --color-secondary-dark: #ffe5fd;
   --color-secondary-contrast: #000000;
   
   /* Background colors */
@@ -41,8 +41,8 @@ body, html, #root {
   --color-border-dark: #757575;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #FF69B4 0%, #90EE90 100%);
-  --gradient-secondary: linear-gradient(135deg, #FFB6C1 0%, #98FB98 100%);
+  --gradient-primary: linear-gradient(135deg, #FF69B4 0%, #fed3ff 100%);
+  --gradient-secondary: linear-gradient(135deg, #FF69B4 0%, #fed3ff 100%);
   --gradient-background: linear-gradient(135deg, #FFF0F5 0%, #F8F8FF 100%);
 }
 

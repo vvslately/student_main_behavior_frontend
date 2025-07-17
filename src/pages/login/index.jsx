@@ -42,32 +42,32 @@ export default function Login() {
 
   return (
     <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' , marginTop: '250px'}}>
-      <div style={{ textAlign: 'center', color: '#334155', marginBottom: 8, fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
+      <div style={{ textAlign: 'center', color: '#222', marginBottom: 8, fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
         ระบบจัดการพฤติกรรมนักเรียน
       </div>
-      <div style={{ textAlign: 'center', color: '#334155', marginBottom: 20, fontSize: 20 }}>
+      <div style={{ textAlign: 'center', color: '#222', marginBottom: 20, fontSize: 20 }}>
         โรงเรียนวชิรธรรมสาธิต
       </div>
-      <h2 style={{ marginBottom: 24, color: '#ff69b4', textAlign: 'center', fontWeight: 700 }}>เข้าสู่ระบบ</h2>
+      <h2 style={{ marginBottom: 24, color: '#222', textAlign: 'center', fontWeight: 700 }}>เข้าสู่ระบบ</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Username</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Username</label>
           <input
             type="text"
             value={username}
             onChange={e => setUsername(e.target.value)}
             required
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Password</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Password</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           />
         </div>
         {error && <div style={{ color: 'red', marginBottom: 16 }}>{error}</div>}

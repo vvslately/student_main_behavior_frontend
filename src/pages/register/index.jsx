@@ -45,57 +45,57 @@ export default function Register() {
 
   return (
     <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' }}>
-      <h2 style={{ marginBottom: 24, color: '#ff69b4', textAlign: 'center', fontWeight: 700 }}>สมัครสมาชิก</h2>
+      <h2 style={{ marginBottom: 24, color: '#222', textAlign: 'center', fontWeight: 700 }}>สมัครสมาชิก</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Username</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Username</label>
           <input
             name="username"
             type="text"
             value={form.username}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Password</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Password</label>
           <input
             name="password"
             type="password"
             value={form.password}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Full Name</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Full Name</label>
           <input
             name="full_name"
             type="text"
             value={form.full_name}
             onChange={handleChange}
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Email</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Email</label>
           <input
             name="email"
             type="email"
             value={form.email}
             onChange={handleChange}
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontWeight: 500 }}>Role</label>
+          <label style={{ fontWeight: 500, color: '#222' }}>Role</label>
           <select
             name="role"
             value={form.role}
             onChange={handleChange}
-            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16 }}
+            style={{ width: '100%', padding: 10, marginTop: 4, borderRadius: 6, border: '1px solid #eee', fontSize: 16, color: '#222' }}
           >
             <option value="admin">admin</option>
             <option value="teacher">teacher</option>
@@ -116,7 +116,7 @@ export default function Register() {
         borderTop: '1px solid var(--color-border-light)'
       }}>
         <p style={{
-          color: 'var(--color-text-secondary)',
+          color: '#222',
           fontSize: '14px',
           marginBottom: '8px'
         }}>
@@ -127,7 +127,8 @@ export default function Register() {
           className="btn btn-secondary"
           style={{
             fontSize: '14px',
-            padding: '8px 16px'
+            padding: '8px 16px',
+            color: '#222'
           }}
         >
           เข้าสู่ระบบ

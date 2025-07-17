@@ -71,18 +71,18 @@ function AddBehaviorModal({ onClose, onSave }) {
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(30,41,59,0.18)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 220, maxWidth: 500, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>เพิ่มพฤติกรรมใหม่</h3>
         <div>
-          <label>ชื่อพฤติกรรม <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>ชื่อพฤติกรรม <span style={{ color: 'red' }}>*</span></label>
           <input name="behavior_name" type="text" value={form.behavior_name} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
         </div>
         <div>
-          <label>รายละเอียด</label>
+          <label style={{ color: '#222' }}>รายละเอียด</label>
           <textarea name="description" value={form.description} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd', minHeight: 60 }} />
         </div>
         <div>
-          <label>ระดับความรุนแรง <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>ระดับความรุนแรง <span style={{ color: 'red' }}>*</span></label>
           <select name="severity_level" value={form.severity_level} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
             <option value="low">low</option>
             <option value="medium">medium</option>
@@ -130,15 +130,15 @@ function EditBehaviorModal({ behavior, onClose, onSave }) {
       <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>แก้ไขพฤติกรรม</h3>
         <div>
-          <label>ชื่อพฤติกรรม <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>ชื่อพฤติกรรม <span style={{ color: 'red' }}>*</span></label>
           <input name="behavior_name" type="text" value={form.behavior_name} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
         </div>
         <div>
-          <label>รายละเอียด</label>
+          <label style={{ color: '#222' }}>รายละเอียด</label>
           <textarea name="description" value={form.description} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd', minHeight: 60 }} />
         </div>
         <div>
-          <label>ระดับความรุนแรง <span style={{ color: 'red' }}>*</span></label>
+          <label style={{ color: '#222' }}>ระดับความรุนแรง <span style={{ color: 'red' }}>*</span></label>
           <select name="severity_level" value={form.severity_level} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
             <option value="low">low</option>
             <option value="medium">medium</option>
@@ -234,10 +234,11 @@ export default function Behaviors() {
         margin: '0 0',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 } }>
-          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0  }}>จัดการพฤติกรรม</h2>
+          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0, color: '#222' }}>จัดการพฤติกรรม</h2>
           <button
             onClick={() => setAddModalOpen(true)}
-            style={{ background: '#2563eb', color: '#fff', padding: '10px 26px', borderRadius: 10, fontWeight: 700, fontSize: 18, boxShadow: '0 2px 8px #2563eb22', transition: 'background 0.2s', border: 'none', cursor: 'pointer' }}
+            className="btn btn-primary"
+            style={{ padding: '8px 16px', borderRadius: 10, fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px #2563eb22', transition: 'background 0.2s', border: 'none', cursor: 'pointer', width: '100%', maxWidth: 200 }}
           >
             + เพิ่มพฤติกรรม
           </button>
@@ -273,39 +274,28 @@ export default function Behaviors() {
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
                           onClick={() => setEditModal({ open: true, behavior: b })}
-                          style={{
-                            background: '#2563eb',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: 6,
-                            padding: '6px 12px',
-                            fontSize: 14,
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            transition: 'background 0.2s'
-                          }}
-                          onMouseOver={(e) => e.target.style.background = '#1d4ed8'}
-                          onMouseOut={(e) => e.target.style.background = '#2563eb'}
+                          title="แก้ไข"
+                          style={{ padding: 6, borderRadius: 6, minWidth: 0, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         >
-                          แก้ไข
+                          {/* SVG EditIcon */}
+                          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.85 2.85a2.121 2.121 0 0 1 3 3l-9.1 9.1a2 2 0 0 1-.71.44l-3.13 1.04a.5.5 0 0 1-.63-.63l1.04-3.13a2 2 0 0 1 .44-.71l9.1-9.1Zm2.12.88a1.121 1.121 0 0 0-1.59 0l-9.1 9.1a1 1 0 0 0-.22.36l-.9 2.7 2.7-.9a1 1 0 0 0 .36-.22l9.1-9.1a1.121 1.121 0 0 0 0-1.59Z" fill="#2563eb"/>
+                          </svg>
                         </button>
                         <button
                           onClick={() => handleDelete(b)}
-                          style={{
-                            background: '#dc2626',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: 6,
-                            padding: '6px 12px',
-                            fontSize: 14,
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            transition: 'background 0.2s'
-                          }}
-                          onMouseOver={(e) => e.target.style.background = '#b91c1c'}
-                          onMouseOut={(e) => e.target.style.background = '#dc2626'}
+                          title="ลบ"
+                          style={{ padding: 6, borderRadius: 6, minWidth: 0, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         >
-                          ลบ
+                          {/* SVG DeleteIcon */}
+                          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="5" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
+                            <rect x="9" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
+                            <rect x="13" y="8" width="2" height="7" rx="1" fill="#ef4444"/>
+                            <rect x="3" y="4" width="14" height="2" rx="1" fill="#ef4444"/>
+                            <rect x="7" y="2" width="6" height="2" rx="1" fill="#ef4444"/>
+                            <rect x="4" y="6" width="12" height="2" rx="1" fill="#ef4444"/>
+                          </svg>
                         </button>
                       </div>
                     </td>
@@ -396,6 +386,12 @@ export default function Behaviors() {
           }
           h2 {
             font-size: 22px !important;
+          }
+          .card-behaviors button.btn.btn-primary {
+            width: 100% !important;
+            max-width: none !important;
+            display: block !important;
+            margin-bottom: 12px !important;
           }
         }
       `}</style>
