@@ -136,58 +136,60 @@ export default function Menu() {
             : 'none',
           fontFamily: 'Prompt, Inter, "Segoe UI", Arial, sans-serif',
           transition: 'left 0.38s cubic-bezier(.4,2,.6,1), box-shadow 0.3s',
-          overflowY: 'auto',
+          overflowY: 'auto', // เปลี่ยนจาก overflow: 'hidden' เป็น overflowY: 'auto'
         }}
       >
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px',
-          paddingTop: 0
-        }}>
-          <img
-            src={logo}
-            alt="โลโก้"
-            style={{
-              width: 128,
-              height: 128,
-              objectFit: 'contain',
-              marginBottom: 8,
-              marginTop: 0
-            }}
-          />
-          <span style={{
-            fontWeight: 800,
-            fontSize: 32,
-            color: 'var(--color-primary-light)',
-            letterSpacing: 1,
-            fontFamily: 'inherit',
-            textShadow: '0 2px 8px var(--color-primary-contrast)',
-            marginTop: 0,
-            textAlign: 'center'
+        <div style={{ flex: '1 1 0%', overflowY: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px',
+            paddingTop: 0
           }}>
-            ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
-          </span>
+            <img
+              src={logo}
+              alt="โลโก้"
+              style={{
+                width: 150,
+                height: 'auto',
+                objectFit: 'contain',
+                marginBottom: 8,
+                marginTop: 0
+              }}
+            />
+            <span style={{
+              fontWeight: 800,
+              fontSize: 32,
+              color: 'var(--color-primary-light)',
+              letterSpacing: 1,
+              fontFamily: 'inherit',
+              textShadow: '0 2px 8px var(--color-primary-contrast)',
+              marginTop: 0,
+              textAlign: 'center'
+            }}>
+              ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
+            </span>
+          </div>
+          <nav>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {filteredMenuItems.map((item, idx) => (
+                <li key={item.to} style={{position:'relative'}}>
+                  <MenuLink
+                    to={item.to}
+                    active={location.pathname === item.to}
+                    delay={idx * 60}
+                    onClick={() => isMobile && setOpen(false)}
+                  >
+                    {item.label}
+                  </MenuLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-        <nav>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {filteredMenuItems.map((item, idx) => (
-              <li key={item.to} style={{position:'relative'}}>
-                <MenuLink
-                  to={item.to}
-                  active={location.pathname === item.to}
-                  delay={idx * 60}
-                  onClick={() => isMobile && setOpen(false)}
-                >
-                  {item.label}
-                </MenuLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        {/* Logout button moved after nav and set to bottom with marginTop: 'auto' */}
+        {/* Logout button moved after scrollable content, always at the bottom */}
         <button
           onClick={async () => {
             const result = await Swal.fire({
@@ -220,7 +222,7 @@ export default function Menu() {
             boxShadow: '0 2px 8px 0 var(--color-border-light)',
             transition: 'background 0.2s, color 0.2s',
             display: 'block',
-            marginTop: 'auto', // This makes the button stick to the bottom
+            marginTop: 'auto',
           }}
         >
           ออกจากระบบ
@@ -271,6 +273,22 @@ export default function Menu() {
           aside nav ul li {
             width: 100%;
           }
+        }
+        /* Custom Scrollbar for aside */
+        aside {
+          scrollbar-width: thin;
+          scrollbar-color: var(--color-primary) #f0f0f0;
+        }
+        aside::-webkit-scrollbar {
+          width: 10px;
+        }
+        aside::-webkit-scrollbar-thumb {
+          background: var(--color-primary);
+          border-radius: 8px;
+        }
+        aside::-webkit-scrollbar-track {
+          background: #f0f0f0;
+          border-radius: 8px;
         }
       `}</style>
     </>
