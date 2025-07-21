@@ -2,52 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import CasePDFDocument from './CasePDFDocument';
+// เพิ่ม import สำหรับ font Sarabun
+import sarabunThin from '../../assets/fonts/Sarabun-Thin.ttf';
 
-
-function exportToCSV(rows) {
-  if (!rows.length) return;
-  const header = Object.keys(rows[0]);
-  const csv = [header.join(',')].concat(
-    rows.map(row => header.map(h => '"' + (row[h] ?? '').toString().replace(/"/g, '""') + '"').join(','))
-  ).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'cases_export.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function exportToPDF(rows) {
-  if (!rows.length) return;
-  const doc = new jsPDF();
-  const header = [
-    "รายละเอียด", "นักเรียน", "ชั้น", "ห้อง", "พฤติกรรม", "ผู้รายงาน", "สถานะ", "วันที่รายงาน", "รอบ", "แผนการดำเนินการ"
-  ];
-  const data = rows.map(c => [
-    c.case_description || '-',
-    c.first_name ? `${c.first_name} ${c.last_name}` : '-',
-    c.class_level || '-',
-    c.class_room || '-',
-    c.behavior_name || '-',
-    c.reporter_name || '-',
-    c.status || '-',
-    c.reported_at ? c.reported_at.split('T')[0] : '-',
-    c.round || '-',
-    c.action_plan || '-'
-  ]);
-  doc.autoTable({
-    head: [header],
-    body: data,
-    styles: { fontSize: 12 },
-    headStyles: { fillColor: [37, 99, 235] }
-  });
-  doc.save('cases_export.pdf');
-}
 
 const EditIcon = ({size=20}) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,17 +55,10 @@ export default function Cases() {
         setLoading(false);
       })
       .catch(() => {
-        setError('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+        setError('เกิดข้อผิดพลาด');
         setLoading(false);
       });
   }, [searchName]);
-
-  const handleSelectAll = e => {
-    setSelected(e.target.checked ? filteredCases.map(c => c.id) : []);
-  };
-  const handleSelect = id => {
-    setSelected(selected.includes(id) ? selected.filter(i => i !== id) : [...selected, id]);
-  };
 
   // Filter by name, room, และประเภท (frontend)
   const filteredCases = cases.filter(c => {
@@ -232,6 +182,434 @@ export default function Cases() {
     }
   };
 
+  // เพิ่มฟังก์ชัน export CSV
+  function generateCSV(selectedCases) {
+    if (!selectedCases || selectedCases.length === 0) return;
+    // กำหนดหัวตาราง CSV
+    const headers = [
+      'ชื่อ', 'นามสกุล', 'เลขประจำตัว', 'ชั้น', 'ห้อง', 'ประเภท', 'พฤติกรรม', 'รายละเอียด', 'รอบ', 'แผนการดำเนินการ', 'ผู้รายงาน', 'วันที่รายงาน', 'สถานะ'
+    ];
+    // สร้างข้อมูลแต่ละแถว
+    const rows = selectedCases.map(c => [
+      c.first_name || '',
+      c.last_name || '',
+      c.student_code || '',
+      c.class_level || '',
+      c.class_room || '',
+      c.behavior_type || '',
+      c.behavior_name || '',
+      c.case_description || '',
+      c.round || '',
+      c.action_plan || '',
+      c.reporter_name || '',
+      c.reported_at ? c.reported_at.split('T')[0] : '',
+      c.status || ''
+    ]);
+    // รวมเป็น string CSV (รองรับภาษาไทย)
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => '"' + String(field).replace(/"/g, '""') + '"').join(','))
+      .join('\r\n');
+    // สร้าง blob และ trigger download
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cases.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ฟังก์ชัน export PDF (1 เคส 1 หน้า, รูปแบบฟอร์มราชการ)
+  async function generatePDF(selectedCases) {
+    if (!selectedCases || selectedCases.length === 0) return;
+    // โหลดฟอนต์ Sarabun-Thin
+    const fontUrl = sarabunThin;
+    const fontName = 'SarabunThin';
+    // Fetch font as ArrayBuffer
+    const fontBuffer = await fetch(fontUrl).then(res => res.arrayBuffer());
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+    const fontBase64 = arrayBufferToBase64(fontBuffer);
+
+    // โหลดโลโก้ครุฑ (image.png)
+    async function getLogoBase64() {
+      const response = await fetch('/image.png');
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    }
+    const logoBase64 = await getLogoBase64();
+
+    // ฟังก์ชันแปลงวันที่เป็นไทย
+    function formatDateThai(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      const day = d.getDate();
+      const month = d.getMonth() + 1;
+      const year = d.getFullYear() + 543;
+      return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+    }
+    // ถ้าไม่มีวันที่ในข้อมูล ให้ใช้วันที่ปัจจุบัน
+    function getTodayThai() {
+      const d = new Date();
+      const day = d.getDate();
+      const month = d.getMonth() + 1;
+      const year = d.getFullYear() + 543;
+      return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+    }
+
+    // สร้าง PDF
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    doc.addFileToVFS('Sarabun-Thin.ttf', fontBase64);
+    doc.addFont('Sarabun-Thin.ttf', fontName, 'normal');
+    doc.setFont(fontName);
+
+    selectedCases.forEach((c, idx) => {
+      if (idx > 0) doc.addPage();
+      let y = 40;
+      // โลโก้ครุฑ
+      if (logoBase64) {
+        doc.addImage(logoBase64, 'PNG', 260, y, 60, 60);
+      }
+      y += 90; // ขยับลงมาอีก (จาก 70 เป็น 90)
+      doc.setFontSize(18);
+      doc.text('บันทึกข้อความ', 230, y);
+      y += 40; // ขยับลงอีก
+      doc.setFontSize(13);
+      doc.text('ส่วนราชการ  โรงเรียนวชิรธรรมสาธิต', 60, y);
+      y += 20;
+      doc.text('ที่ ........................................................................................................................', 60, y);
+      // วันที่
+      const dateText = c.reported_at ? formatDateThai(c.reported_at) : getTodayThai();
+      doc.text(`วันที่ ${dateText}`, 420, y);
+      y += 24;
+      doc.text('เรื่อง  รายงานการประพฤติผิดวินัยของโรงเรียน', 60, y);
+      y += 24;
+      doc.text('เรียน  ผู้อำนวยการโรงเรียนวชิรธรรมสาธิต', 60, y);
+      y += 24;
+      // ข้อมูลนักเรียน
+      const fullName = `${c.first_name || ''} ${c.last_name || ''}`;
+      // ชื่อ
+      doc.text(`เนื่องจาก (ด.ช./ด.ญ./นาย/นางสาว) ${fullName}`, 100, y);
+      // เส้นใต้ชื่อ
+      const nameWidth = doc.getTextWidth(`เนื่องจาก (ด.ช./ด.ญ./นาย/นางสาว) ${fullName}`);
+      doc.setLineDashPattern([2, 2], 0);
+      doc.line(100 + 170, y + 2, 100 + 170 + doc.getTextWidth(fullName), y + 2);
+      doc.setLineDashPattern([], 0);
+      y += 24;
+      // ชั้น ห้อง เลขประจำตัว
+      const classText = `ชั้น ${c.class_level || ''}`;
+      const roomText = `ห้อง ${c.class_room || ''}`;
+      const codeText = `เลขประจำตัว ${c.student_code || ''}`;
+      doc.text(`${classText} ${roomText} ${codeText} ได้ประพฤติผิดระเบียบวินัยของโรงเรียนวชิรธรรมสาธิต`, 60, y);
+      // เส้นใต้ชั้น ห้อง เลขประจำตัว
+      let xClass = 60 + doc.getTextWidth('ชั้น ');
+      doc.setLineDashPattern([2, 2], 0);
+      doc.line(xClass, y + 2, xClass + doc.getTextWidth(c.class_level || ''), y + 2);
+      doc.setLineDashPattern([], 0);
+      let xRoom = xClass + doc.getTextWidth((c.class_level || '') + ' ห้อง ');
+      doc.setLineDashPattern([2, 2], 0);
+      doc.line(xRoom, y + 2, xRoom + doc.getTextWidth(c.class_room || ''), y + 2);
+      doc.setLineDashPattern([], 0);
+      let xCode = xRoom + doc.getTextWidth((c.class_room || '') + ' เลขประจำตัว ');
+      doc.setLineDashPattern([2, 2], 0);
+      doc.line(xCode, y + 2, xCode + doc.getTextWidth(c.student_code || ''), y + 2);
+      doc.setLineDashPattern([], 0);
+      y += 24;
+      doc.text('มีพฤติกรรมไม่เหมาะสมแก่สภาพนักเรียน ตามระเบียบโรงเรียนวชิรธรรมสาธิต ดังนี้', 60, y);
+      y += 20;
+      doc.setFontSize(12);
+      // ประเภท
+      doc.text(`ประเภท: ${c.behavior_type || '-'}`, 80, y);
+      if (c.behavior_type) {
+        let xType = 80 + doc.getTextWidth('ประเภท: ');
+        doc.setLineDashPattern([2, 2], 0);
+        doc.line(xType, y + 2, xType + doc.getTextWidth(c.behavior_type), y + 2);
+        doc.setLineDashPattern([], 0);
+      }
+      y += 18;
+      // พฤติกรรม
+      doc.text(`พฤติกรรม: ${c.behavior_name || '-'}`, 80, y);
+      if (c.behavior_name) {
+        let xBeh = 80 + doc.getTextWidth('พฤติกรรม: ');
+        doc.setLineDashPattern([2, 2], 0);
+        doc.line(xBeh, y + 2, xBeh + doc.getTextWidth(c.behavior_name), y + 2);
+        doc.setLineDashPattern([], 0);
+      }
+      y += 18;
+      // รายละเอียด
+      doc.text(`รายละเอียด: ${c.case_description || '-'}`, 80, y, { maxWidth: 420 });
+      if (c.case_description) {
+        let xDesc = 80 + doc.getTextWidth('รายละเอียด: ');
+        let descWidth = doc.getTextWidth(c.case_description);
+        doc.setLineDashPattern([2, 2], 0);
+        doc.line(xDesc, y + 2, xDesc + Math.min(descWidth, 420), y + 2);
+        doc.setLineDashPattern([], 0);
+      }
+      y += 36;
+      // รอบ
+      doc.text(`รอบการทำทัณฑ์บน : ${c.round || '-'}`, 80, y);
+      if (c.round) {
+        let xRound = 80 + doc.getTextWidth('รอบการทำทัณฑ์บน : ');
+        doc.setLineDashPattern([2, 2], 0);
+        doc.line(xRound, y + 2, xRound + doc.getTextWidth(c.round), y + 2);
+        doc.setLineDashPattern([], 0);
+      }
+      y += 18;
+      // แผนการดำเนินการ
+      doc.text(`แผนการดำเนินการ: ${c.action_plan || '-'}`, 80, y, { maxWidth: 420 });
+      if (c.action_plan) {
+        let xPlan = 80 + doc.getTextWidth('แผนการดำเนินการ: ');
+        let planWidth = doc.getTextWidth(c.action_plan);
+        doc.setLineDashPattern([2, 2], 0);
+        doc.line(xPlan, y + 2, xPlan + Math.min(planWidth, 420), y + 2);
+        doc.setLineDashPattern([], 0);
+      }
+      y += 36;
+      doc.setFontSize(13);
+      doc.text('ข้าพเจ้าได้ดำเนินการตามแนวปฏิบัติในการควบคุมความประพฤตินักเรียน และทำการติดต่อแนะนำ', 60, y); y += 18;
+      doc.text('ความประพฤตินักเรียนและแจ้งผู้ปกครองรับทราบแล้ว จึงเรียนมาเพื่อโปรดทราบ', 60, y); y += 36;
+      // ช่องลายเซ็น
+      doc.text('(.............................................)', 80, y);
+      doc.text('(.............................................)', 320, y);
+      y += 18;
+      doc.text('ครูที่ปรึกษาคนที่ 1', 100, y);
+      doc.text('ครูที่ปรึกษาคนที่ 2', 340, y);
+      y += 36;
+      doc.text('(.............................................)', 80, y);
+      doc.text('(.............................................)', 320, y);
+      y += 18;
+      doc.text('หัวหน้าระดับ ชั้น ม. ....', 90, y);
+      doc.text('หัวหน้างาน................', 340, y);
+      y += 36;
+      // เส้นปะยาวๆ ก่อนชื่อ (นางอรอนงค์ ชาญชอบ) และ (นางสาวมณี ทองทวี)
+      doc.setLineDashPattern([2, 2], 0);
+      doc.line(80, y, 200, y); // ฝั่งซ้าย
+      doc.line(320, y, 440, y); // ฝั่งขวา
+      doc.setLineDashPattern([], 0);
+      y += 18;
+      doc.text('(นางอรอนงค์ ชาญชอบ)', 80, y);
+      doc.text('(นางสาวมณี ทองทวี)', 320, y);
+      y += 18;
+      doc.text('หัวหน้ากลุ่มบริหารงานบุคคล', 80, y);
+      doc.text('รองผู้อำนวยการกลุ่มบริหารงานบุคคล', 320, y);
+
+      // --- หน้าสอง: ฟอร์มสอบสวน (ปรับปรุงใหม่) ---
+      doc.addPage();
+      y = 60;
+      doc.setFontSize(18);
+      doc.text('แบบบันทึกการสอบสวน', 297.5, y, { align: 'center' }); // กึ่งกลาง A4
+      y += 30;
+      doc.setFontSize(12);
+      doc.text('โรงเรียนวชิรธรรมสาธิต', 400, y);
+      doc.text(`วันที่ ${c.reported_at ? formatDateThai(c.reported_at) : getTodayThai()}`, 60, y);
+      y += 24;
+      doc.text('เรื่อง', 60, y);
+      doc.text('เรียน ผู้อำนวยการโรงเรียนวชิรธรรมสาธิต', 120, y);
+      y += 24;
+      doc.text(`ชั้น ${c.class_level || ''}`, 60, y);
+      doc.text(`เลขประจำตัว ${c.student_code || ''}`, 150, y);
+      doc.text(`ครั้งที่สอบสวนชื่อ ${c.first_name || ''} ${c.last_name || ''}`, 300, y);
+      y += 24;
+      doc.text(`ชื่อผู้ปกครอง: ${c.guardian_name || '-'}`, 60, y);
+      doc.text(`ความสัมพันธ์: ${c.guardian_relation || '-'}`, 300, y);
+      doc.text(`โทรศัพท์: ${c.contact_info || '-'}`, 450, y);
+      y += 28;
+      // กล่องบันทึกเหตุการณ์
+      doc.text('บันทึกเหตุการณ์', 60, y);
+      y += 8;
+      doc.rect(60, y, 480, 50);
+      y += 60;
+      // กล่องความเห็น (แบ่ง 2 คอลัมน์)
+      const col1X = 60, col2X = 320, boxW = 220, boxH = 40;
+      doc.text('ความเห็นของหัวหน้าระดับ/ผู้รับมอบอำนาจ', col1X, y);
+      doc.text('ความเห็นของหัวหน้างาน', col2X, y);
+      y += 6;
+      doc.rect(col1X, y, boxW, boxH);
+      doc.rect(col2X, y, boxW, boxH);
+      y += boxH + 10;
+      doc.text('ลงชื่อ.........................................................', col1X, y);
+      doc.text('ชั้น ม. ....', col1X + 140, y);
+      doc.text('ลงชื่อ.........................................................', col2X, y);
+      doc.text('ชั้น ม. ....', col2X + 140, y);
+      y += 30;
+      // กล่องความเห็น (แบ่ง 2 คอลัมน์ ล่าง)
+      doc.text('ความเห็นของหัวหน้ากลุ่มบริหารงานบุคคล', col1X, y);
+      doc.text('ความเห็นของรองผู้อำนวยการกลุ่มบริหารงานบุคคล', col2X, y);
+      y += 6;
+      doc.rect(col1X, y, boxW, boxH);
+      doc.rect(col2X, y, boxW, boxH);
+      y += boxH + 10;
+      doc.text('ลงชื่อ.........................................................', col1X, y);
+      doc.text('(นางอรอนงค์ ชาญชอบ)', col1X, y + 16);
+      doc.text('ลงชื่อ.........................................................', col2X, y);
+      doc.text('(นางสาวมณี ทองทวี)', col2X, y + 16);
+      // กล่องลายเซ็นนักเรียน/ครูที่ปรึกษา
+      y += 36;
+      doc.text('ลงชื่อ.........................................................', col1X, y);
+      doc.text('นักเรียนผู้บันทึก', col1X + 140, y);
+      doc.text('ลงชื่อ.........................................................', col2X, y);
+      doc.text('ครูที่ปรึกษา', col2X + 100, y);
+
+      // --- หน้า 3: หลักฐานการพบผู้ปกครอง (ปรับช่องไฟ) ---
+      doc.addPage();
+      y = 60;
+      doc.setFontSize(18);
+      doc.text('หลักฐานการพบผู้ปกครอง', 297.5, y, { align: 'center' });
+      y += 28;
+      doc.setFontSize(12);
+      doc.text('โรงเรียนวชิรธรรมสาธิต', 400, y);
+      doc.text('1253 สุขุมวิท 101/1', 400, y + 16);
+      doc.text('เขตพระโขนง กทม. 10260', 400, y + 32);
+      doc.text(`วันที่ ${c.reported_at ? formatDateThai(c.reported_at) : getTodayThai()}`, 60, y);
+      y += 48;
+
+      doc.text('เรียน  ผู้อำนวยการโรงเรียนวชิรธรรมสาธิต', 60, y);
+      y += 24;
+
+      doc.text(`นักเรียนชั้น ม.${c.class_level || ''} เลขประจำตัว ${c.student_code || ''} ชื่อ ${c.first_name || ''} ${c.last_name || ''}`, 60, y);
+      doc.text(`ผู้ปกครอง: ${c.guardian_name || '-'}`, 380, y);
+      y += 22;
+
+      doc.text('ได้พบกับ:', 60, y);
+      doc.text('ครูที่ปรึกษา ...........................................', 120, y);
+      doc.text('หัวหน้าระดับ ...........................................', 320, y);
+      y += 20;
+      doc.text('ผู้ช่วยผู้อำนวยการฯ ...........................................', 60, y);
+      doc.text('รองผู้อำนวยการกลุ่มบริหารงานบุคคล ...........................................', 320, y);
+      y += 22;
+
+      doc.text('ในวันที่ .......... เดือน .......... พ.ศ. ..........  ณ ห้อง ..........', 60, y);
+      y += 22;
+
+      doc.text('และได้รับทราบปัญหาพฤติกรรมที่ลูก ๆ ของตนได้มีปัญหาตามที่โรงเรียนแจ้งให้ทราบดังนี้', 60, y);
+      y += 18;
+      doc.text('................................................................................................................................................................................', 60, y);
+      y += 16;
+      doc.text('................................................................................................................................................................................', 60, y);
+      y += 16;
+      doc.text('................................................................................................................................................................................', 60, y);
+      y += 24;
+
+      doc.text('ข้าพเจ้ายินยอมร่วมมือกับทางโรงเรียนเพื่อการแก้ปัญหาดังกล่าว โดยการลงชื่อยินยอมตามข้างต้น', 60, y);
+      y += 24;
+
+      doc.text('ลงชื่อ......................................................... ผู้ปกครอง', 60, y);
+      doc.text('(.........................................................)', 60, y + 16);
+      doc.text('ลงชื่อ.........................................................', 320, y);
+      doc.text('(.........................................................)', 320, y + 16);
+      y += 40;
+
+      doc.text('ครูที่ปรึกษา ชั้น ม. .........', 60, y);
+      doc.text('หัวหน้าระดับชั้น ม. .........', 320, y);
+      y += 20;
+      doc.text('ลงชื่อ.........................................................', 60, y);
+      doc.text('หัวหน้างาน.........................................................', 320, y);
+      y += 20;
+      doc.text('(นางอรอนงค์ ชาญชอบ)', 60, y);
+      doc.text('(นางสาวมณี ทองทวี)', 320, y);
+
+      // --- หน้า 4: บันทึกทัณฑ์บน (ตามฟอร์มภาพ) ---
+      doc.addPage();
+      y = 60;
+      doc.setFontSize(18);
+      doc.text('บันทึกทัณฑ์บน', 297.5, y, { align: 'center' });
+      y += 24;
+      doc.setFontSize(12);
+      doc.text('โรงเรียนวชิรธรรมสาธิต', 400, y);
+      doc.text(`วันที่ ${c.reported_at ? formatDateThai(c.reported_at) : getTodayThai()}`, 60, y);
+      y += 24;
+
+      doc.text(`ชั้น ม.${c.class_level || ''} เลขประจำตัว ${c.student_code || ''} ชื่อ ${c.first_name || ''} ${c.last_name || ''}`, 60, y);
+      y += 20;
+      doc.text(`กับโรงเรียนต่อหน้าผู้ปกครองชื่อ ${c.guardian_name || '............................................................'}`, 60, y);
+      y += 20;
+      doc.text('ส่งให้ครูที่ปรึกษาเพื่อดำเนินการดังนี้', 60, y);
+      y += 20;
+
+      doc.text('ข้อที่ 1. ข้าพเจ้าได้ประพฤติตนไม่เหมาะสมกับสถานะนักเรียน ดังระเบียบฯ คือ', 60, y);
+      y += 20;
+      doc.text('................................................................................................................................................................................', 60, y);
+      y += 16;
+      doc.text('................................................................................................................................................................................', 60, y);
+      y += 16;
+      doc.text('................................................................................................................................................................................', 60, y);
+      y += 20;
+
+      doc.text('ข้อที่ 2. ข้าพเจ้าขอยอมรับว่า ความผิดดังกล่าวข้างต้น เป็นความจริงทุกประการ', 60, y);
+      y += 20;
+
+      doc.text('ข้อที่ 3. ข้าพเจ้าจะปฏิบัติตามข้อตกลงที่กำหนดในมาตรการควบคุมความประพฤตินักเรียน ดังนี้', 60, y);
+      y += 20;
+
+      // ช่องติ๊กแบบ box
+      const boxX4 = 80, boxW4 = 10, boxH4 = 10, textOffset4 = 16;
+      doc.rect(boxX4, y - boxH4 + 2, boxW4, boxH4); // box 1
+      doc.text('ทำทัณฑ์บนครั้งที่ 1', boxX4 + textOffset4, y + 2);
+      y += 18;
+      doc.rect(boxX4, y - boxH4 + 2, boxW4, boxH4); // box 2
+      doc.text('ทำทัณฑ์บนครั้งที่ 2', boxX4 + textOffset4, y + 2);
+      y += 18;
+      doc.rect(boxX4, y - boxH4 + 2, boxW4, boxH4); // box 3
+      doc.text('ควบคุมความประพฤติ โดยรายงานตัวกับหัวหน้าระดับ/หัวหน้างาน/รองผู้อำนวยการฯ', boxX4 + textOffset4, y + 2);
+      y += 18;
+      doc.rect(boxX4, y - boxH4 + 2, boxW4, boxH4); // box 4
+      doc.text('นักเรียนเรียนซ้ำผ่านช่องทาง W.T.S Platform เป็นระยะเวลา .......... วัน .......... ชั่วโมง', boxX4 + textOffset4, y + 2);
+      y += 18;
+      doc.rect(boxX4, y - boxH4 + 2, boxW4, boxH4); // box 5
+      doc.text('อื่น ๆ ....................................................................................................................', boxX4 + textOffset4, y + 2);
+      y += 24;
+
+      doc.text('ข้อที่ 4. ข้าพเจ้าได้ทราบถึงความผิดดังกล่าวแล้ว ขอให้ผ่านบันทึกทัณฑ์บนนี้', 60, y);
+      y += 20;
+      doc.text('ข้อที่ 5. ข้าพเจ้าขอรับรองว่าจะไม่กระทำผิดซ้ำอีก หากข้าพเจ้าประพฤติผิดซ้ำจะยอมรับโทษตามระเบียบของโรงเรียนวชิรธรรมสาธิต', 60, y, { maxWidth: 420 });
+      // เว้นบรรทัดหลังข้อความ wrap
+      const text5 = 'ข้อที่ 5. ข้าพเจ้าขอรับรองว่าจะไม่กระทำผิดซ้ำอีก หากข้าพเจ้าประพฤติผิดซ้ำจะยอมรับโทษตามระเบียบของโรงเรียนวชิรธรรมสาธิต';
+      const lines5 = doc.splitTextToSize(text5, 420);
+      doc.text(lines5, 60, y);
+      y += lines5.length * 18 + 6; // 18px ต่อบรรทัด + เว้นท้าย
+
+      // ลายเซ็น
+      doc.text('ลงชื่อ......................................................... ผู้ทัณฑ์บน', 60, y);
+      doc.text('ลงชื่อ......................................................... ผู้ปกครอง', 320, y);
+      y += 16;
+      doc.text(`ลงชื่อ......................................................... ${c.advisor_name ? 'ครูที่ปรึกษา' : 'ครูที่ปรึกษาคนที่ 1'}`, 60, y);
+      doc.text('ลงชื่อ......................................................... ครูที่ปรึกษาคนที่ 2', 320, y);
+      y += 16;
+      doc.text('ลงชื่อ......................................................... หัวหน้ากลุ่มบริหารงานบุคคล', 60, y);
+      doc.text('ลงชื่อ......................................................... รองผู้อำนวยการกลุ่มบริหารงานบุคคล', 320, y);
+      y += 24;
+      doc.text('(นายรามณรงค์ โลแสน)', 60, y);
+      doc.text('ผู้อำนวยการโรงเรียนวชิรธรรมสาธิต', 60, y + 16);
+    });
+    doc.save('cases.pdf');
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div style={{
       maxWidth: 1200,
@@ -256,6 +634,26 @@ export default function Cases() {
         position: 'relative',
         transition: 'box-shadow 0.3s',
       }}>
+        {/* ปุ่ม Export CSV ด้านบนตาราง */}
+        {/* <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+          <button
+            style={{
+              background: '#2563eb',
+              color: '#fff',
+              padding: '8px 18px',
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 16,
+              border: 'none',
+              cursor: selected.length === 0 ? 'not-allowed' : 'pointer',
+              opacity: selected.length === 0 ? 0.5 : 1
+            }}
+            disabled={selected.length === 0}
+            onClick={() => generateCSV(cases.filter(c => selected.includes(c.id)))}
+          >
+            Export CSV
+          </button>
+        </div> */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #222)', letterSpacing: 1, margin: 0 , color: '#222'}}>จัดการเคส/เหตุการณ์</h2>
           <button
@@ -291,27 +689,45 @@ export default function Cases() {
             onChange={e => setSearchRoom(e.target.value)}
             style={{ padding: 10, borderRadius: 8, border: '1px solid #cbd5e1', minWidth: 120, fontSize: 16 }}
           />
+          {/* Export CSV button moved here */}
+          <button
+            style={{
+              background: '#2563eb',
+              color: '#fff',
+              padding: '8px 18px',
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 16,
+              border: 'none',
+              cursor: selected.length === 0 ? 'not-allowed' : 'pointer',
+              opacity: selected.length === 0 ? 0.5 : 1,
+              marginLeft: 8
+            }}
+            disabled={selected.length === 0}
+            onClick={() => generateCSV(cases.filter(c => selected.includes(c.id)))}
+          >
+            Export CSV
+          </button>
+          {/* Export PDF button */}
+          <button
+            style={{
+              background: '#10b981',
+              color: '#fff',
+              padding: '8px 18px',
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 16,
+              border: 'none',
+              cursor: selected.length === 0 ? 'not-allowed' : 'pointer',
+              opacity: selected.length === 0 ? 0.5 : 1,
+              marginLeft: 4
+            }}
+            disabled={selected.length === 0}
+            onClick={() => generatePDF(cases.filter(c => selected.includes(c.id)))}
+          >
+            Export PDF
+          </button>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button
-              onClick={() => exportToCSV(filteredCases.filter(c => selected.includes(c.id)))}
-              disabled={!selected.length}
-              style={{ background: selected.length ? '#10b981' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px', fontWeight: 700, fontSize: 16, minWidth: 120, height: 50, boxShadow: selected.length ? '0 2px 8px #10b98133' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s'  }}
-            >
-              Export CSV
-            </button>
-            <PDFDownloadLink
-              document={<CasePDFDocument rows={filteredCases.filter(c => selected.includes(c.id))} />}
-              fileName="cases_export.pdf"
-            >
-              {({ loading }) => (
-                <button
-                  disabled={!selected.length}
-                  style={{ background: selected.length ? '#ef4444' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px', fontWeight: 700, fontSize: 16, minWidth: 120, height: 50, boxShadow: selected.length ? '0 2px 8px #ef444433' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s' }}
-                >
-                  {loading ? 'กำลังสร้าง PDF...' : 'Export PDF'}
-                </button>
-              )}
-            </PDFDownloadLink>
           </div>
         </div>
         {/* Pagination controls moved here */}
@@ -343,8 +759,19 @@ export default function Cases() {
             <table style={{ width: '100%', minWidth: 1200, borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }} className="cases-table-responsive">
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
+                  {/* เพิ่ม checkbox ที่หัวตาราง */}
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
-                    <input type="checkbox" checked={selected.length === filteredCases.length && filteredCases.length > 0} onChange={handleSelectAll} />
+                    <input
+                      type="checkbox"
+                      checked={selected.length === paginatedCases.length && paginatedCases.length > 0}
+                      onChange={e => {
+                        if (e.target.checked) {
+                          setSelected(paginatedCases.map(c => c.id));
+                        } else {
+                          setSelected([]);
+                        }
+                      }}
+                    />
                   </th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>#</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th>
@@ -366,8 +793,19 @@ export default function Cases() {
                   <tr><td colSpan={14} style={{ textAlign: 'center', padding: 24 }}>ไม่มีข้อมูล</td></tr>
                 ) : paginatedCases.map((c, idx) => (
                   <tr key={c.id} style={{ transition: 'background 0.22s', background: selected.includes(c.id) ? '#e0f2fe' : 'transparent' }}>
+                    {/* เพิ่ม checkbox ในแต่ละแถว */}
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
-                      <input type="checkbox" checked={selected.includes(c.id)} onChange={() => handleSelect(c.id)} />
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(c.id)}
+                        onChange={e => {
+                          if (e.target.checked) {
+                            setSelected(sel => [...sel, c.id]);
+                          } else {
+                            setSelected(sel => sel.filter(id => id !== c.id));
+                          }
+                        }}
+                      />
                     </td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{(currentPage - 1) * casesPerPage + idx + 1}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_type || '-'}</td>
@@ -514,15 +952,13 @@ function SkeletonTable() {
             <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
             <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
             <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
-            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
-            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {[...Array(5)].map((_, r) => (
             <tr key={r}>
               {/* 14 columns: checkbox, #, ประเภท, รายละเอียด, นักเรียน, ชั้น, ห้อง, พฤติกรรม, รอบ, แผนการดำเนินการ, ผู้รายงาน, สถานะ, วันที่รายงาน, การจัดการ */}
-              {[...Array(14)].map((_, c) => (
+              {[...Array(13)].map((_, c) => (
                 <td key={c} style={{ padding: 10, border: '1px solid #e5e7eb' }}>
                   <div style={{
                     height: 16,
