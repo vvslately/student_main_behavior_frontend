@@ -9,6 +9,7 @@ const menuItems = [
   { to: '/cases', label: 'บันทึกเคส/เหตุการณ์' },
   { to: '/students', label: 'จัดการนักเรียน' },
   { to: '/admins', label: 'จัดการผู้ใช้งาน' },
+  { to: '/logs', label: 'บันทึกการเข้าใช้' },
 ];
 
 export default function Menu() {

@@ -8,6 +8,7 @@ import Cases from './pages/cases'
 import Students from './pages/students'
 import Admins from './pages/admins'
 import Menu from './components/menu'
+import LoginLogs from './pages/logs'
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function AppContent() {
           <Route path="/cases" element={<Cases />} />
           <Route path="/students" element={<Students />} />
           <Route path="/admins" element={<Admins />} />
+          <Route path="/logs" element={<LoginLogs />}/>
         </Routes>
       </main>
       <style>{`
