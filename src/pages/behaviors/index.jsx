@@ -47,7 +47,7 @@ function AddBehaviorModal({ onClose, onSave }) {
   const [form, setForm] = useState({
     behavior_name: '',
     description: '',
-    severity_level: 'low',
+    severity_level: 'ร้ายแรง',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -84,9 +84,8 @@ function AddBehaviorModal({ onClose, onSave }) {
         <div>
           <label style={{ color: '#222' }}>ระดับความรุนแรง <span style={{ color: 'red' }}>*</span></label>
           <select name="severity_level" value={form.severity_level} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
-            <option value="low">low</option>
-            <option value="medium">medium</option>
-            <option value="high">high</option>
+            <option value="ร้ายแรง">ร้ายแรง</option>
+            <option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option>
           </select>
         </div>
         {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
@@ -103,7 +102,7 @@ function EditBehaviorModal({ behavior, onClose, onSave }) {
   const [form, setForm] = useState({
     behavior_name: behavior.behavior_name || '',
     description: behavior.description || '',
-    severity_level: behavior.severity_level || 'low',
+    severity_level: behavior.severity_level || 'ร้ายแรง',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -140,9 +139,9 @@ function EditBehaviorModal({ behavior, onClose, onSave }) {
         <div>
           <label style={{ color: '#222' }}>ระดับความรุนแรง <span style={{ color: 'red' }}>*</span></label>
           <select name="severity_level" value={form.severity_level} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
-            <option value="low">low</option>
-            <option value="medium">medium</option>
-            <option value="high">high</option>
+            <option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option>
+
+            <option value="ร้ายแรง">ร้ายแรง</option>
           </select>
         </div>
         {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}

@@ -241,7 +241,7 @@ export default function Cases() {
           <button
             onClick={() => exportToCSV(filteredCases.filter(c => selected.includes(c.id)))}
             disabled={!selected.length}
-            style={{ background: selected.length ? '#10b981' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontWeight: 700, fontSize: 16, boxShadow: selected.length ? '0 2px 8px #10b98133' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s' }}
+            style={{ background: selected.length ? '#10b981' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontWeight: 700, fontSize: 16, boxShadow: selected.length ? '0 2px 8px #10b98133' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s'  }}
           >
             Export CSV
           </button>

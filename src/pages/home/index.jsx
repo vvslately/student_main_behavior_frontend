@@ -12,6 +12,10 @@ export default function Home() {
   const [error, setError] = useState('');
   const [recentCases, setRecentCases] = useState([]);
   const [loadingCases, setLoadingCases] = useState(true);
+  const [allCases, setAllCases] = useState([]);
+  const [allBehaviors, setAllBehaviors] = useState([]);
+  const [loadingAllCases, setLoadingAllCases] = useState(true);
+  const [loadingAllBehaviors, setLoadingAllBehaviors] = useState(true);
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
@@ -34,15 +38,46 @@ export default function Home() {
           setLoadingCases(false);
         })
         .catch(() => setLoadingCases(false));
+      // Fetch all behaviors first
+      fetch('https://student-main-behavior-backend.onrender.com/api/behaviors')
+        .then(res => res.json())
+        .then(data => {
+          setAllBehaviors(data);
+          setLoadingAllBehaviors(false);
+          // After behaviors, fetch all cases
+          fetch('https://student-main-behavior-backend.onrender.com/api/cases')
+            .then(res => res.json())
+            .then(data => {
+              setAllCases(data);
+              setLoadingAllCases(false);
+            })
+            .catch(() => setLoadingAllCases(false));
+        })
+        .catch(() => setLoadingAllBehaviors(false));
     }
   }, [navigate]);
 
-  // เตรียมข้อมูลสำหรับกราฟแท่ง
-  const pieData = stats ? [
-    { name: 'นักเรียน', value: stats.students },
-    { name: 'เคส', value: stats.cases },
-  ] : [];
-  const pieColors = ['#ff69b4', '#fbcfe8'];
+  // Pie chart for severity (use behavior's severity_level)
+  let severityPieData = [];
+  if (allCases && allCases.length > 0 && allBehaviors && allBehaviors.length > 0) {
+    // Map behavior_id to severity_level
+    const behaviorMap = {};
+    allBehaviors.forEach(b => {
+      behaviorMap[b.id] = b.severity_level;
+    });
+    let severe = 0;
+    let notSevere = 0;
+    allCases.forEach(c => {
+      const sev = behaviorMap[c.behavior_id];
+      if (sev === 'ร้ายแรง') severe++;
+      else if (sev === 'ไม่ร้ายแรง') notSevere++;
+    });
+    severityPieData = [
+      { name: 'ร้ายแรง', value: severe },
+      { name: 'ไม่ร้ายแรง', value: notSevere },
+    ];
+  }
+  const severityPieColors = ['#ef4444', '#10b981'];
 
   return (
     <>
@@ -77,25 +112,29 @@ export default function Home() {
                 <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
                 <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
               </div>
-              {/* กราฟแท่งสถิติภาพรวม */}
+              {/* Pie chart for severity level (now main chart) */}
               <div style={{ width: '100%', minHeight: 260, height: '32vw', maxHeight: 400, marginTop: 32, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius="80%"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {pieData.map((entry, idx) => (
-                        <Cell key={`cell-${idx}`} fill={pieColors[idx % pieColors.length]} />
-                      ))}
-                    </Pie>
-                    <Legend />
-                  </PieChart>
+                  {loadingAllCases || loadingAllBehaviors ? (
+                    <div>กำลังโหลดข้อมูล...</div>
+                  ) : (
+                    <PieChart>
+                      <Pie
+                        data={severityPieData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius="80%"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {severityPieData.map((entry, idx) => (
+                          <Cell key={`cell-severity-${idx}`} fill={severityPieColors[idx % severityPieColors.length]} />
+                        ))}
+                      </Pie>
+                      <Legend />
+                    </PieChart>
+                  )}
                 </ResponsiveContainer>
               </div>
             </>
