@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRef, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import logo from '../../assets/logo.webp';
 
 const menuItems = [
   { to: '/home', label: 'หน้าแรก' },
@@ -122,8 +123,35 @@ export default function Menu() {
           overflowY: 'auto',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px' }}>
-          <span style={{ fontWeight: 800, fontSize: 32, color: 'var(--color-primary-light)', letterSpacing: 1, fontFamily: 'inherit', textShadow: '0 2px 8px var(--color-primary-contrast)', marginTop: isMobile ? 54 : 0 }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px',
+          paddingTop: 0
+        }}>
+          <img
+            src={logo}
+            alt="โลโก้"
+            style={{
+              width: 128,
+              height: 128,
+              objectFit: 'contain',
+              marginBottom: 8,
+              marginTop: 0
+            }}
+          />
+          <span style={{
+            fontWeight: 800,
+            fontSize: 32,
+            color: 'var(--color-primary-light)',
+            letterSpacing: 1,
+            fontFamily: 'inherit',
+            textShadow: '0 2px 8px var(--color-primary-contrast)',
+            marginTop: 0,
+            textAlign: 'center'
+          }}>
             ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
           </span>
         </div>

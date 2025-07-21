@@ -7,14 +7,14 @@ body, html, #root {
 /* CSS Custom Properties for Pink-Green Theme */
 :root {
   /* Primary colors - Pink */
-  --color-primary: #FF69B4;
-  --color-primary-light: rgb(255, 188, 255);
+  --color-primary: #ff92c9;
+  --color-primary-light: rgba(255, 97, 255, 0.822);
   --color-primary-dark: #C71585;
   --color-primary-contrast: #FFFFFF;
   
   /* Secondary colors - Green */
   --color-secondary: #ffe3fb;
-  --color-secondary-light: #fb98e5;
+  --color-secondary-light: #d64ab8;
   --color-secondary-dark: #ffe5fd;
   --color-secondary-contrast: #000000;
   
@@ -41,9 +41,9 @@ body, html, #root {
   --color-border-dark: #757575;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #FF69B4 0%, #fed3ff 100%);
-  --gradient-secondary: linear-gradient(135deg, #FF69B4 0%, #fed3ff 100%);
-  --gradient-background: linear-gradient(135deg, #FFF0F5 0%, #F8F8FF 100%);
+  --gradient-primary: linear-gradient(160deg, #ffc0df 20%, #fed3ff 100%);
+  --gradient-secondary: linear-gradient(160deg, #FF69B4 20%, #fed3ff 100%);
+  --gradient-background: linear-gradient(160deg, #FFF0F5 20%, #F8F8FF 100%);
 }
 
 /* Global styles */

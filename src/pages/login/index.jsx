@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import logo from '../../assets/logo.webp';
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -41,7 +42,10 @@ export default function Login() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' , marginTop: '250px'}}>
+    <div style={{ maxWidth: 600, margin: '20px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' , marginTop: '150px'}}>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+        <img src={logo} alt="โลโก้" style={{ width: 128, height: 128, objectFit: 'contain', marginBottom: 8 }} />
+      </div>
       <div style={{ textAlign: 'center', color: '#222', marginBottom: 8, fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
         ระบบจัดการพฤติกรรมนักเรียน
       </div>
