@@ -195,7 +195,7 @@ export default function Home() {
             </div>
           ) : recentCases && recentCases.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }} className="case-col-responsive">
-              {recentCases.map((c, i) => (
+              {recentCases.slice(0, 3).map((c, i) => (
                 <CaseCard key={c.id || i} caseData={c} />
               ))}
             </div>
