@@ -35,7 +35,7 @@ export default function Login() {
         navigate('/home')
       }
     } catch (err) {
-      setError('Network error')
+      // ไม่แสดง error อะไรเลยถ้า network error
     } finally {
       setLoading(false)
     }

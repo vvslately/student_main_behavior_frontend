@@ -26,10 +26,9 @@ function exportToPDF(rows) {
   if (!rows.length) return;
   const doc = new jsPDF();
   const header = [
-    "ชื่อเคส", "รายละเอียด", "นักเรียน", "ชั้น", "ห้อง", "พฤติกรรม", "ผู้รายงาน", "สถานะ", "วันที่รายงาน"
+    "รายละเอียด", "นักเรียน", "ชั้น", "ห้อง", "พฤติกรรม", "ผู้รายงาน", "สถานะ", "วันที่รายงาน", "รอบ", "แผนการดำเนินการ"
   ];
   const data = rows.map(c => [
-    c.case_title || '-',
     c.case_description || '-',
     c.first_name ? `${c.first_name} ${c.last_name}` : '-',
     c.class_level || '-',
@@ -37,7 +36,9 @@ function exportToPDF(rows) {
     c.behavior_name || '-',
     c.reporter_name || '-',
     c.status || '-',
-    c.reported_at ? c.reported_at.split('T')[0] : '-'
+    c.reported_at ? c.reported_at.split('T')[0] : '-',
+    c.round || '-',
+    c.action_plan || '-'
   ]);
   doc.autoTable({
     head: [header],
@@ -77,6 +78,12 @@ export default function Cases() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const casesPerPage = 5;
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    setUser(storedUser);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -255,7 +262,7 @@ export default function Cases() {
         <div style={{ display: 'flex', gap: 14, marginBottom: 18, flexWrap: 'nowrap', alignItems: 'center', overflowX: 'auto' }}>
           <input
             type="text"
-            placeholder="ค้นหาชื่อเคส, รายละเอียด, สถานะ"
+            placeholder="ค้นหารายละเอียด, สถานะ"
             value={search}
             onChange={e => setSearch(e.target.value)}
             style={{ padding: 10, borderRadius: 8, border: '1px solid #cbd5e1', minWidth: 200, fontSize: 16 }}
@@ -330,12 +337,14 @@ export default function Cases() {
                     <input type="checkbox" checked={selected.length === filteredCases.length && filteredCases.length > 0} onChange={handleSelectAll} />
                   </th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>#</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ชื่อเคส</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รายละเอียด</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>นักเรียน</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>ชั้น</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>ห้อง</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>พฤติกรรม</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รอบ</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>แผนการดำเนินการ</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ผู้รายงาน</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>สถานะ</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>วันที่รายงาน</th>
@@ -344,25 +353,27 @@ export default function Cases() {
               </thead>
               <tbody>
                 {filteredCases.length === 0 ? (
-                  <tr><td colSpan={11} style={{ textAlign: 'center', padding: 24 }}>ไม่มีข้อมูล</td></tr>
+                  <tr><td colSpan={14} style={{ textAlign: 'center', padding: 24 }}>ไม่มีข้อมูล</td></tr>
                 ) : paginatedCases.map((c, idx) => (
                   <tr key={c.id} style={{ transition: 'background 0.22s', background: selected.includes(c.id) ? '#e0f2fe' : 'transparent' }}>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
                       <input type="checkbox" checked={selected.includes(c.id)} onChange={() => handleSelect(c.id)} />
                     </td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{(currentPage - 1) * casesPerPage + idx + 1}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.case_title || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.case_description || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.first_name ? `${c.first_name} ${c.last_name}` : '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.class_level || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.class_room || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_name || '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_type || '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.round || '-'}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.action_plan || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.reporter_name || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
                       {c.status === 'open' ? (
                         <span style={{ color: '#10b981', fontWeight: 700 }}>ดำเนินการแล้ว</span>
                       ) : c.status === 'in_progress' ? (
-                        <span style={{ color: '#f59e42', fontWeight: 700 }}>กำลังดำเนินการ</span> 
+                        <span style={{ color: '#f59e42', fontWeight: 700 }}>กำลังดำเนินการ</span>
                       ) : c.status === 'closed' ? (
                         <span style={{ color: '#ef4444', fontWeight: 700 }}>ละทิ้ง</span>
                       ) : c.status}
@@ -371,37 +382,41 @@ export default function Cases() {
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', minWidth: 80 }}>
                       <button
                         onClick={() => handleEdit(c.id)}
-                        title="แก้ไข"
+                        title={user.role === 'teacher' ? "ไม่มีสิทธิ์แก้ไข" : "แก้ไข"}
+                        disabled={user.role === 'teacher'}
                         style={{
                           marginRight: 8,
                           background: 'none',
                           border: 'none',
                           padding: 6,
                           borderRadius: 8,
-                          cursor: 'pointer',
+                          cursor: user.role === 'teacher' ? 'not-allowed' : 'pointer',
                           width: 36,
                           height: 36,
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
+                          opacity: user.role === 'teacher' ? 0.5 : 1
                         }}
                       >
                         <EditIcon size={28} />
                       </button>
                       <button
                         onClick={() => handleDelete(c.id)}
-                        title="ลบ"
+                        title={user.role === 'teacher' ? "ไม่มีสิทธิ์ลบ" : "ลบ"}
+                        disabled={user.role === 'teacher'}
                         style={{
                           background: 'none',
                           border: 'none',
                           padding: 6,
                           borderRadius: 8,
-                          cursor: 'pointer',
+                          cursor: user.role === 'teacher' ? 'not-allowed' : 'pointer',
                           width: 36,
                           height: 36,
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
+                          opacity: user.role === 'teacher' ? 0.5 : 1
                         }}
                       >
                         <DeleteIcon size={28} />
@@ -416,7 +431,7 @@ export default function Cases() {
         )}
       </div>
       {editCase && <EditCaseModal caseData={editCase} onClose={handleEditModalClose} onSave={handleEditModalSave} />}
-      {addModalOpen && <AddCaseModal onClose={() => setAddModalOpen(false)} onSave={handleAddModalSave} />}
+      {addModalOpen && <AddCaseModal onClose={() => setAddModalOpen(false)} onSave={handleAddModalSave} userRole={user.role} />}
       <style>{`
         :root {
           --primary: #2563eb;
@@ -477,7 +492,7 @@ function SkeletonTable() {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
-            {[...Array(11)].map((_, i) => (
+            {[...Array(14)].map((_, i) => (
               <th key={i} style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
             ))}
           </tr>
@@ -485,7 +500,7 @@ function SkeletonTable() {
         <tbody>
           {[...Array(5)].map((_, r) => (
             <tr key={r}>
-              {[...Array(11)].map((_, c) => (
+              {[...Array(14)].map((_, c) => (
                 <td key={c} style={{ padding: 10, border: '1px solid #e5e7eb' }}>
                   <div style={{
                     height: 16,
@@ -533,11 +548,23 @@ function EditCaseModal({ caseData, onClose, onSave }) {
     }}>
       <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px #2563eb33', padding: 32, minWidth: 340, maxWidth: 420, width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <h3 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: '#2563eb' }}>แก้ไขเคส</h3>
-        <label style={{ color: '#222' }}>ชื่อเคส
-          <input name="case_title" value={form.case_title || ''} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4 }} />
-        </label>
         <label style={{ color: '#222' }}>รายละเอียด
           <textarea name="case_description" value={form.case_description || ''} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4, minHeight: 60 }} />
+        </label>
+        <label style={{ color: '#222' }}>รอบ
+          <select name="round" value={form.round} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4 }}>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </label>
+        <label style={{ color: '#222' }}>แผนการดำเนินการ
+          <select name="action_plan" value={form.action_plan || ''} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4 }}>
+            <option value="">-- ไม่เลือก --</option>
+            <option value="ควบคุมพฤติกรรม">ควบคุมพฤติกรรม</option>
+            <option value="เรียนผ่านช่องทาง W.T.S Platform">เรียนผ่านช่องทาง W.T.S Platform</option>
+            <option value="เข้าคณะ School Credits">เข้าคณะ School Credits</option>
+          </select>
         </label>
         <label style={{ color: '#222' }}>สถานะ
           <select name="status" value={form.status} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1', marginTop: 4 }}>
@@ -556,14 +583,15 @@ function EditCaseModal({ caseData, onClose, onSave }) {
 }
 
 // MODAL ADD COMPONENT (copy logic from add.jsx)
-function AddCaseModal({ onClose, onSave }) {
+function AddCaseModal({ onClose, onSave, userRole }) {
   const [form, setForm] = useState({
     student_id: '',
     behavior_id: '',
     reported_by: '',
-    case_title: '',
     case_description: '',
-    status: 'open',
+    status: userRole === 'teacher' ? 'in_progress' : 'open',
+    round: userRole === 'teacher' ? '1' : '1',
+    action_plan: '',
   });
   const [students, setStudents] = useState([]);
   const [studentSearch, setStudentSearch] = useState('');
@@ -660,16 +688,6 @@ function AddCaseModal({ onClose, onSave }) {
           />
         </div>
         <div>
-          <label style={{ color: '#222' }}>ชื่อเคส</label>
-          <input
-            name="case_title"
-            type="text"
-            value={form.case_title}
-            onChange={handleChange}
-            style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}
-          />
-        </div>
-        <div>
           <label style={{ color: '#222' }}>รายละเอียด</label>
           <textarea
             name="case_description"
@@ -679,17 +697,73 @@ function AddCaseModal({ onClose, onSave }) {
             style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}
           />
         </div>
+        <div style={{display: 'flex', gap: 12}}>
+          <div style={{flex: 1}}>
+            <label style={{ color: '#222' }}>รอบ</label>
+            <select
+              name="round"
+              value={form.round}
+              onChange={handleChange}
+              disabled={userRole === 'teacher'}
+              style={{
+                width: '100%',
+                padding: 8,
+                marginTop: 4,
+                borderRadius: 6,
+                border: '1px solid #ddd',
+                background: userRole === 'teacher' ? '#f1f5f9' : '#fff',
+                cursor: userRole === 'teacher' ? 'not-allowed' : 'pointer'
+              }}
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div style={{flex: 1}}>
+            <label style={{ color: '#222' }}>สถานะ</label>
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              disabled={userRole === 'teacher'}
+              style={{
+                width: '100%',
+                padding: 8,
+                marginTop: 4,
+                borderRadius: 6,
+                border: '1px solid #ddd',
+                background: userRole === 'teacher' ? '#f1f5f9' : '#fff',
+                cursor: userRole === 'teacher' ? 'not-allowed' : 'pointer'
+              }}
+            >
+              <option value="open">ดำเนินการแล้ว</option>
+              <option value="in_progress">กำลังดำเนินการ</option>
+              <option value="closed">ละทิ้ง</option>
+            </select>
+          </div>
+        </div>
         <div>
-          <label style={{ color: '#222' }}>สถานะ</label>
+          <label style={{ color: '#222' }}>แผนการดำเนินการ</label>
           <select
-            name="status"
-            value={form.status}
+            name="action_plan"
+            value={form.action_plan}
             onChange={handleChange}
-            style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}
+            disabled={userRole === 'teacher'}
+            style={{
+              width: '100%',
+              padding: 8,
+              marginTop: 4,
+              borderRadius: 6,
+              border: '1px solid #ddd',
+              background: userRole === 'teacher' ? '#f1f5f9' : '#fff',
+              cursor: userRole === 'teacher' ? 'not-allowed' : 'pointer'
+            }}
           >
-            <option value="open">open</option>
-            <option value="in_progress">in_progress</option>
-            <option value="closed">closed</option>
+            <option value="">-- ไม่เลือก --</option>
+            <option value="ควบคุมพฤติกรรม">ควบคุมพฤติกรรม</option>
+            <option value="เรียนผ่านช่องทาง W.T.S Platform">เรียนผ่านช่องทาง W.T.S Platform</option>
+            <option value="เข้าคณะ School Credits">เข้าคณะ School Credits</option>
           </select>
         </div>
         {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}

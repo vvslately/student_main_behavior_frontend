@@ -48,6 +48,7 @@ function AddBehaviorModal({ onClose, onSave }) {
     behavior_name: '',
     description: '',
     severity_level: 'ร้ายแรง',
+    type: 'ระเบียบวินัย', // เพิ่มค่าเริ่มต้น
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -88,6 +89,15 @@ function AddBehaviorModal({ onClose, onSave }) {
             <option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option>
           </select>
         </div>
+        <div>
+          <label style={{ color: '#222' }}>ประเภท <span style={{ color: 'red' }}>*</span></label>
+          <select name="type" value={form.type} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
+            <option value="ความรุนแรง">ความรุนแรง</option>
+            <option value="ระเบียบวินัย">ระเบียบวินัย</option>
+            <option value="เพศวิถี">เพศวิถี</option>
+            <option value="สิ่งเสพติด">สิ่งเสพติด</option>
+          </select>
+        </div>
         {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
           <button type="button" onClick={onClose} style={{ flex: 1, background: '#cbd5e1', color: '#334155', border: 'none', borderRadius: 8, padding: '10px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>ยกเลิก</button>
@@ -103,6 +113,7 @@ function EditBehaviorModal({ behavior, onClose, onSave }) {
     behavior_name: behavior.behavior_name || '',
     description: behavior.description || '',
     severity_level: behavior.severity_level || 'ร้ายแรง',
+    type: behavior.type || 'ระเบียบวินัย', // เพิ่ม type
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -142,6 +153,15 @@ function EditBehaviorModal({ behavior, onClose, onSave }) {
             <option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option>
 
             <option value="ร้ายแรง">ร้ายแรง</option>
+          </select>
+        </div>
+        <div>
+          <label style={{ color: '#222' }}>ประเภท <span style={{ color: 'red' }}>*</span></label>
+          <select name="type" value={form.type} onChange={handleChange} required style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }}>
+            <option value="ความรุนแรง">ความรุนแรง</option>
+            <option value="ระเบียบวินัย">ระเบียบวินัย</option>
+            <option value="เพศวิถี">เพศวิถี</option>
+            <option value="สิ่งเสพติด">สิ่งเสพติด</option>
           </select>
         </div>
         {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
@@ -255,6 +275,7 @@ export default function Behaviors() {
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ชื่อพฤติกรรม</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รายละเอียด</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ระดับความรุนแรง</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th> {/* เพิ่มคอลัมน์ประเภท */}
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>วันที่สร้าง</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>การดำเนินการ</th>
                 </tr>
@@ -268,6 +289,7 @@ export default function Behaviors() {
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.behavior_name}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.description || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.severity_level}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.type || '-'}</td> {/* แสดงประเภท */}
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.created_at ? b.created_at.split('T')[0] : '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -309,7 +331,7 @@ export default function Behaviors() {
             const res = await fetch('https://student-main-behavior-backend.onrender.com/api/behaviors', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(form),
+              body: JSON.stringify(form), // form มี type แล้ว
             });
             const data = await res.json();
             if (!res.ok) {
@@ -328,7 +350,7 @@ export default function Behaviors() {
             const res = await fetch(`https://student-main-behavior-backend.onrender.com/api/behaviors/${editModal.behavior.id}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(form),
+              body: JSON.stringify(form), // form มี type แล้ว
             });
             const data = await res.json();
             if (!res.ok) {

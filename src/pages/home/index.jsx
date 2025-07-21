@@ -94,6 +94,22 @@ export default function Home() {
     count: allCases.filter(c => String(c.class_level) === String(num)).length
   }));
 
+  // Card: จำนวนเคสแต่ละประเภท
+  const typeCounts = {
+    'ความรุนแรง': 0,
+    'ระเบียบวินัย': 0,
+    'เพศวิถี': 0,
+    'สิ่งเสพติด': 0,
+  };
+  allCases.forEach(c => {
+    if (typeCounts.hasOwnProperty(c.behavior_type)) {
+      typeCounts[c.behavior_type]++;
+    }
+  });
+  // Pie chart for type
+  const typePieData = Object.entries(typeCounts).map(([name, value]) => ({ name, value }));
+  const typePieColors = ['#ef4444', '#2563eb', '#f59e42', '#10b981'];
+
   return (
     <>
       {/* <Menu /> ลบออกเพื่อไม่ให้เมนูแสดงซ้ำ */}
@@ -111,6 +127,7 @@ export default function Home() {
       }} className="home-container-responsive">
         <div>
           <h2 style={{ marginBottom: 24, color: 'var(--color-text-primary)' }}>สถิติภาพรวม</h2>
+
           {loading ? (
             <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
               {[...Array(4)].map((_, i) => (
@@ -127,17 +144,27 @@ export default function Home() {
                 <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
                 <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
               </div>
-              {/* Pie chart and Bar chart side by side */}
-              <div style={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 32,
-                justifyContent: 'center',
-                alignItems: 'stretch',
-                flexWrap: 'wrap',
-                marginTop: 32,
-              }}>
+              {/* Bar chart for cases by class level (อยู่บน PieChart) */}
+              <div style={{ width: '100%', marginTop: 32, marginBottom: 0 }}>
+                <div style={{ minWidth: 320, maxWidth: 700, margin: '0 auto', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>จำนวนเคสในแต่ละชั้น (ม.1-ม.6)</h3>
+                  {loadingAllCases ? (
+                    <div>กำลังโหลดข้อมูล...</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={classBarData} margin={{ top: 16, right: 24, left: 0, bottom: 16 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="class_level" type="category" interval={0} tick={{fontWeight:600}} />
+                        <YAxis allowDecimals={false} />
+                        <Tooltip />
+                        <Bar dataKey="count" fill="#2563eb" radius={[8,8,0,0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+              </div>
+              {/* PieChart ทั้งสอง (ความรุนแรง, ประเภท) อยู่แถวล่างคู่กัน */}
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 32, justifyContent: 'center', alignItems: 'stretch', flexWrap: 'wrap', marginTop: 32 }}>
                 {/* Pie chart for severity level */}
                 <div style={{ flex: 1, minWidth: 320, maxWidth: 500, background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                   <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>สัดส่วนความรุนแรงของเคส</h3>
@@ -164,22 +191,27 @@ export default function Home() {
                     </ResponsiveContainer>
                   )}
                 </div>
-                {/* Bar chart for cases by class level */}
+                {/* PieChart จำนวนเคสแต่ละประเภท */}
                 <div style={{ flex: 1, minWidth: 320, maxWidth: 500, background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>จำนวนเคสในแต่ละชั้น (ม.1-ม.6)</h3>
-                  {loadingAllCases ? (
-                    <div>กำลังโหลดข้อมูล...</div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={classBarData} margin={{ top: 16, right: 24, left: 0, bottom: 16 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="class_level" type="category" interval={0} tick={{fontWeight:600}} />
-                        <YAxis allowDecimals={false} />
-                        <Tooltip />
-                        <Bar dataKey="count" fill="#2563eb" radius={[8,8,0,0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
+                  <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>สัดส่วนประเภทของเคส</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={typePieData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius="80%"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {typePieData.map((entry, idx) => (
+                          <Cell key={`cell-type-${idx}`} fill={typePieColors[idx % typePieColors.length]} />
+                        ))}
+                      </Pie>
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </>

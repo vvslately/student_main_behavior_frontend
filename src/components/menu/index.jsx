@@ -5,7 +5,7 @@ import logo from '../../assets/logo.webp';
 
 const menuItems = [
   { to: '/home', label: 'หน้าแรก' },
-  { to: '/behaviors', label: 'จัดการพฤติกรรมนักเรียน' },
+  { to: '/behaviors', label: 'ประเภทพฤติกรรม' },
   { to: '/cases', label: 'บันทึกเคส/เหตุการณ์' },
   { to: '/students', label: 'จัดการนักเรียน' },
   { to: '/admins', label: 'จัดการผู้ใช้งาน' },
@@ -27,6 +27,21 @@ export default function Menu() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Filter menu by role (headteacher เหลือแค่ /home, /cases, /logs)
+  let filteredMenuItems = menuItems;
+  let user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.role === 'headteacher' || user.role === 'teacher') {
+      filteredMenuItems = menuItems.filter(item => ['/home','/cases','/logs'].includes(item.to));
+    }
+  } catch (e) {}
+
+  // สร้างข้อความสวัสดี
+  const displayName = user.full_name || user.username || '';
+  const displayRole = user.role ? `(${user.role})` : '';
+  const greeting = displayName ? `สวัสดี, ${displayName} ${displayRole}` : '';
 
   return (
     <>
@@ -158,7 +173,7 @@ export default function Menu() {
         </div>
         <nav>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {menuItems.map((item, idx) => (
+            {filteredMenuItems.map((item, idx) => (
               <li key={item.to} style={{position:'relative'}}>
                 <MenuLink
                   to={item.to}

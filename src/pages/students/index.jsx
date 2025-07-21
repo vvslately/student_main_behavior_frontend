@@ -72,6 +72,8 @@ function AddStudentModal({ onClose, onSave }) {
     guardian_name: '',
     contact_info: '',
     class_room: '',
+    guardian_relation: '',
+    advisor_name: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -138,6 +140,10 @@ function AddStudentModal({ onClose, onSave }) {
             <input name="guardian_name" type="text" value={form.guardian_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
+            <label style={{ color: '#222' }}>ความสัมพันธ์กับนักเรียน</label>
+            <input name="guardian_relation" type="text" value={form.guardian_relation} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          </div>
+          <div style={{ flex: 1 }}>
             <label style={{ color: '#222' }}>ข้อมูลติดต่อ</label>
             <input name="contact_info" type="text" value={form.contact_info} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
@@ -154,6 +160,10 @@ function AddStudentModal({ onClose, onSave }) {
             showYearDropdown
             dropdownMode="select"
           />
+        </div>
+        <div>
+          <label style={{ color: '#222' }}>ครูที่ปรึกษา</label>
+          <input name="advisor_name" type="text" value={form.advisor_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
         </div>
         {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
@@ -348,7 +358,9 @@ export default function Students() {
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ห้อง</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>วันเกิด</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ผู้ปกครอง</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ความสัมพันธ์กับนักเรียน</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ติดต่อ</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ครูที่ปรึกษา</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>วันที่สร้าง</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', minWidth: 90, textAlign: 'center' }}>การจัดการ</th>
                 </tr>
@@ -369,7 +381,9 @@ export default function Students() {
                         <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{s.class_room || '-'}</td>
                         <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{formatDateDMY(s.birthdate)}</td>
                         <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{s.guardian_name || '-'}</td>
+                        <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{s.guardian_relation || '-'}</td>
                         <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{s.contact_info || '-'}</td>
+                        <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{s.advisor_name || '-'}</td>
                         <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{s.created_at ? s.created_at.split('T')[0] : '-'}</td>
                         <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center', minWidth: 90 }}>
                           <button
@@ -522,6 +536,10 @@ function EditStudentModal({ studentData, onClose, onSave }) {
             <input name="guardian_name" type="text" value={form.guardian_name} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
           <div style={{ flex: 1 }}>
+            <label style={{ color: '#222' }}>ความสัมพันธ์กับนักเรียน</label>
+            <input name="guardian_relation" type="text" value={form.guardian_relation || ''} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
+          </div>
+          <div style={{ flex: 1 }}>
             <label style={{ color: '#222' }}>ข้อมูลติดต่อ</label>
             <input name="contact_info" type="text" value={form.contact_info} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
           </div>
@@ -539,6 +557,10 @@ function EditStudentModal({ studentData, onClose, onSave }) {
             dropdownMode="select"
             
           />
+        </div>
+        <div>
+          <label style={{ color: '#222' }}>ครูที่ปรึกษา</label>
+          <input name="advisor_name" type="text" value={form.advisor_name || ''} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid #ddd' }} />
         </div>
         <div>
           <label style={{ color: '#222' }}>วันที่สร้าง</label>
