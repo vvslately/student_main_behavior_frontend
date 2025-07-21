@@ -70,7 +70,6 @@ export default function Cases() {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
   const [searchName, setSearchName] = useState('');
   const [searchRoom, setSearchRoom] = useState('');
   const [selected, setSelected] = useState([]);
@@ -79,6 +78,11 @@ export default function Cases() {
   const [currentPage, setCurrentPage] = useState(1);
   const casesPerPage = 5;
   const [user, setUser] = useState({});
+  // เพิ่ม state สำหรับประเภทที่เลือก
+  const [selectedType, setSelectedType] = useState('');
+
+  // สร้างรายการประเภททั้งหมดจากข้อมูล cases
+  const allTypes = Array.from(new Set(cases.map(c => c.behavior_type).filter(Boolean)));
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -87,7 +91,7 @@ export default function Cases() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('https://student-main-behavior-backend.onrender.com/api/cases' + (search ? `?q=${encodeURIComponent(search)}` : ''))
+    fetch('https://student-main-behavior-backend.onrender.com/api/cases' + (searchName ? `?q=${encodeURIComponent(searchName)}` : ''))
       .then(res => res.json())
       .then(data => {
         setCases(data);
@@ -97,7 +101,7 @@ export default function Cases() {
         setError('เกิดข้อผิดพลาดในการโหลดข้อมูล');
         setLoading(false);
       });
-  }, [search]);
+  }, [searchName]);
 
   const handleSelectAll = e => {
     setSelected(e.target.checked ? filteredCases.map(c => c.id) : []);
@@ -106,7 +110,7 @@ export default function Cases() {
     setSelected(selected.includes(id) ? selected.filter(i => i !== id) : [...selected, id]);
   };
 
-  // Filter by name and room (frontend)
+  // Filter by name, room, และประเภท (frontend)
   const filteredCases = cases.filter(c => {
     const nameMatch = `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase().includes(searchName.toLowerCase());
     // Normalize class_level and class_room for search
@@ -131,14 +135,16 @@ export default function Cases() {
         classLevelLabel.includes(searchRoomTrim) ||
         classRoomStr.includes(searchRoomTrim);
     }
-    return nameMatch && roomMatch;
+    // filter ประเภท
+    const typeMatch = !selectedType || c.behavior_type === selectedType;
+    return nameMatch && roomMatch && typeMatch;
   });
   // Pagination logic
   const totalPages = Math.ceil(filteredCases.length / casesPerPage) || 1;
   const paginatedCases = filteredCases.slice((currentPage - 1) * casesPerPage, currentPage * casesPerPage);
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, searchName, searchRoom]);
+  }, [searchName, searchRoom]);
 
   // SWEETALERT2 DELETE
   const handleDelete = async (id) => {
@@ -260,13 +266,17 @@ export default function Cases() {
           </button>
         </div>
         <div style={{ display: 'flex', gap: 14, marginBottom: 18, flexWrap: 'nowrap', alignItems: 'center', overflowX: 'auto' }}>
-          <input
-            type="text"
-            placeholder="ค้นหารายละเอียด, สถานะ"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{ padding: 10, borderRadius: 8, border: '1px solid #cbd5e1', minWidth: 200, fontSize: 16 }}
-          />
+          {/* ปุ่มค้นหาประเภท */}
+          <select
+            value={selectedType}
+            onChange={e => setSelectedType(e.target.value)}
+            style={{ padding: 10, borderRadius: 8, border: '1px solid #cbd5e1', minWidth: 160, fontSize: 16 }}
+          >
+            <option value="">-- ค้นหาประเภท --</option>
+            {allTypes.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
           <input
             type="text"
             placeholder="ค้นหาชื่อ-นามสกุลนักเรียน"
@@ -337,12 +347,12 @@ export default function Cases() {
                     <input type="checkbox" checked={selected.length === filteredCases.length && filteredCases.length > 0} onChange={handleSelectAll} />
                   </th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>#</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รายละเอียด</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>นักเรียน</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>ชั้น</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>ห้อง</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>พฤติกรรม</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รอบ</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>แผนการดำเนินการ</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ผู้รายงาน</th>
@@ -360,12 +370,12 @@ export default function Cases() {
                       <input type="checkbox" checked={selected.includes(c.id)} onChange={() => handleSelect(c.id)} />
                     </td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{(currentPage - 1) * casesPerPage + idx + 1}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_type || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.case_description || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.first_name ? `${c.first_name} ${c.last_name}` : '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.class_level || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{c.class_room || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_name || '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.behavior_type || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.round || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.action_plan || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.reporter_name || '-'}</td>
@@ -492,14 +502,26 @@ function SkeletonTable() {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
-            {[...Array(14)].map((_, i) => (
-              <th key={i} style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
-            ))}
+            {/* 14 columns: checkbox, #, ประเภท, รายละเอียด, นักเรียน, ชั้น, ห้อง, พฤติกรรม, รอบ, แผนการดำเนินการ, ผู้รายงาน, สถานะ, วันที่รายงาน, การจัดการ */}
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th> {/* ประเภท */}
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th> {/* รายละเอียด */}
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
+            <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {[...Array(5)].map((_, r) => (
             <tr key={r}>
+              {/* 14 columns: checkbox, #, ประเภท, รายละเอียด, นักเรียน, ชั้น, ห้อง, พฤติกรรม, รอบ, แผนการดำเนินการ, ผู้รายงาน, สถานะ, วันที่รายงาน, การจัดการ */}
               {[...Array(14)].map((_, c) => (
                 <td key={c} style={{ padding: 10, border: '1px solid #e5e7eb' }}>
                   <div style={{
