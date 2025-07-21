@@ -75,6 +75,8 @@ export default function Cases() {
   const [selected, setSelected] = useState([]);
   const [editCase, setEditCase] = useState(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const casesPerPage = 5;
 
   useEffect(() => {
     setLoading(true);
@@ -124,6 +126,12 @@ export default function Cases() {
     }
     return nameMatch && roomMatch;
   });
+  // Pagination logic
+  const totalPages = Math.ceil(filteredCases.length / casesPerPage) || 1;
+  const paginatedCases = filteredCases.slice((currentPage - 1) * casesPerPage, currentPage * casesPerPage);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, searchName, searchRoom]);
 
   // SWEETALERT2 DELETE
   const handleDelete = async (id) => {
@@ -158,6 +166,7 @@ export default function Cases() {
 
   // MODAL EDIT
   const handleEdit = (id) => {
+    setAddModalOpen(false); // Always close Add modal before opening Edit
     const found = cases.find(c => c.id === id);
     setEditCase(found);
   };
@@ -180,6 +189,12 @@ export default function Cases() {
     } catch (err) {
       Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
     }
+  };
+
+  // MODAL ADD
+  const handleAddClick = () => {
+    setEditCase(null); // Always close Edit modal before opening Add
+    setAddModalOpen(true);
   };
 
   // ADD CASE MODAL
@@ -231,7 +246,7 @@ export default function Cases() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #222)', letterSpacing: 1, margin: 0 , color: '#222'}}>จัดการเคส/เหตุการณ์</h2>
           <button
-            onClick={() => setAddModalOpen(true)}
+            onClick={handleAddClick}
             style={{ background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', padding: '8px 16px', borderRadius: 10, fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px var(--color-primary, #2563eb22)', transition: 'background 0.2s', border: 'none', cursor: 'pointer', width: '100%', maxWidth: 200 }}
           >
             + เพิ่มเคส
@@ -282,13 +297,33 @@ export default function Cases() {
             </PDFDownloadLink>
           </div>
         </div>
+        {/* Pagination controls moved here */}
+        {filteredCases.length > casesPerPage && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginBottom: 18 }}>
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              style={{ padding: '6px 18px', borderRadius: 8, border: '1px solid #cbd5e1', background: currentPage === 1 ? '#f1f5f9' : '#fff', color: '#222', fontWeight: 600, cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+            >
+              ก่อนหน้า
+            </button>
+            <span style={{ fontWeight: 600, color: '#2563eb' }}>หน้า {currentPage} / {totalPages}</span>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              style={{ padding: '6px 18px', borderRadius: 8, border: '1px solid #cbd5e1', background: currentPage === totalPages ? '#f1f5f9' : '#fff', color: '#222', fontWeight: 600, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+            >
+              ถัดไป
+            </button>
+          </div>
+        )}
         {loading ? (
           <SkeletonTable />
         ) : error ? (
           <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }} className="cases-table-scroll">
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }} className="cases-table-responsive">
+            <table style={{ width: '100%', minWidth: 1200, borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }} className="cases-table-responsive">
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
@@ -310,12 +345,12 @@ export default function Cases() {
               <tbody>
                 {filteredCases.length === 0 ? (
                   <tr><td colSpan={11} style={{ textAlign: 'center', padding: 24 }}>ไม่มีข้อมูล</td></tr>
-                ) : filteredCases.map((c, i) => (
+                ) : paginatedCases.map((c, idx) => (
                   <tr key={c.id} style={{ transition: 'background 0.22s', background: selected.includes(c.id) ? '#e0f2fe' : 'transparent' }}>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
                       <input type="checkbox" checked={selected.includes(c.id)} onChange={() => handleSelect(c.id)} />
                     </td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{i + 1}</td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{(currentPage - 1) * casesPerPage + idx + 1}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.case_title || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.case_description || '-'}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{c.first_name ? `${c.first_name} ${c.last_name}` : '-'}</td>
@@ -376,6 +411,7 @@ export default function Cases() {
                 ))}
               </tbody>
             </table>
+            {/* Pagination controls removed from here */}
           </div>
         )}
       </div>
@@ -395,6 +431,7 @@ export default function Cases() {
         @media (max-width: 700px) {
           .cases-table-responsive {
             font-size: 13px !important;
+            min-width: 900px !important;
           }
           .cases-table-responsive th, .cases-table-responsive td {
             padding: 7px !important;
