@@ -58,25 +58,26 @@ export default function Home() {
   }, [navigate]);
 
   // Pie chart for severity (use behavior's severity_level)
-  let severityPieData = [];
+  let severe = 0;
+  let notSevere = 0;
+
   if (allCases && allCases.length > 0 && allBehaviors && allBehaviors.length > 0) {
     // Map behavior_id to severity_level
     const behaviorMap = {};
     allBehaviors.forEach(b => {
       behaviorMap[b.id] = b.severity_level;
     });
-    let severe = 0;
-    let notSevere = 0;
+    
     allCases.forEach(c => {
       const sev = behaviorMap[c.behavior_id];
       if (sev === 'ร้ายแรง') severe++;
       else if (sev === 'ไม่ร้ายแรง') notSevere++;
     });
-    severityPieData = [
-      { name: 'ร้ายแรง', value: severe },
-      { name: 'ไม่ร้ายแรง', value: notSevere },
-    ];
   }
+  const severityPieData = [
+    { name: 'ร้ายแรง', value: severe },
+    { name: 'ไม่ร้ายแรง', value: notSevere },
+  ];
   const severityPieColors = ['#ef4444', '#10b981'];
 
   // Bar chart for cases by class level (class_level is 1-6, show as ม.1-ม.6)
@@ -138,15 +139,23 @@ export default function Home() {
             <div style={{ color: 'red' }}>{error}</div>
           ) : stats ? (
             <>
-              <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }} className="stat-row-responsive">
-                <StatCard label="นักเรียนทั้งหมด" value={stats.students} color="#2563eb" />
-                <StatCard label="ผู้ใช้ (Admin/Teacher/Counselor)" value={stats.admins} color="#f59e42" />
-                <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
-                <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
+              <div style={{ display: 'flex', flexDirection: 'row', gap: 24, width: '100%' }} className="stat-row-responsive">
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
+                  <StatCard label="นักเรียนทั้งหมด" value={stats.students} color="#2563eb" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
+                  <StatCard label="ผู้ใช้ (Admin/Teacher/Counselor)" value={stats.admins} color="#f59e42" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
+                  <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
+                  <StatCard label="เคส/เหตุการณ์ทั้งหมด" value={stats.cases} color="#ef4444" />
+                </div>
               </div>
               {/* Bar chart for cases by class level (อยู่บน PieChart) */}
               <div style={{ width: '100%', marginTop: 32, marginBottom: 0 }}>
-                <div style={{ minWidth: 320, maxWidth: 700, margin: '0 auto', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                   <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>จำนวนเคสในแต่ละชั้น (ม.1-ม.6)</h3>
                   {loadingAllCases ? (
                     <div>กำลังโหลดข้อมูล...</div>
@@ -166,7 +175,7 @@ export default function Home() {
               {/* PieChart ทั้งสอง (ความรุนแรง, ประเภท) อยู่แถวล่างคู่กัน */}
               <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 32, justifyContent: 'center', alignItems: 'stretch', flexWrap: 'wrap', marginTop: 32 }}>
                 {/* Pie chart for severity level */}
-                <div style={{ flex: 1, minWidth: 320, maxWidth: 500, background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                   <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>สัดส่วนความรุนแรงของเคส</h3>
                   {loadingAllCases || loadingAllBehaviors ? (
                     <div>กำลังโหลดข้อมูล...</div>
@@ -192,26 +201,30 @@ export default function Home() {
                   )}
                 </div>
                 {/* PieChart จำนวนเคสแต่ละประเภท */}
-                <div style={{ flex: 1, minWidth: 320, maxWidth: 500, background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ flex: 1, minWidth: 0, maxWidth: 'none', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #e0e7ef33', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                   <h3 style={{ margin: 0, marginBottom: 16, color: '#222', fontWeight: 700, fontSize: 20 }}>สัดส่วนประเภทของเคส</h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={typePieData}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius="80%"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {typePieData.map((entry, idx) => (
-                          <Cell key={`cell-type-${idx}`} fill={typePieColors[idx % typePieColors.length]} />
-                        ))}
-                      </Pie>
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  {loadingAllCases ? (
+                    <div>กำลังโหลดข้อมูล...</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={typePieData}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius="80%"
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {typePieData.map((entry, idx) => (
+                            <Cell key={`cell-type-${idx}`} fill={typePieColors[idx % typePieColors.length]} />
+                          ))}
+                        </Pie>
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
                 </div>
               </div>
             </>

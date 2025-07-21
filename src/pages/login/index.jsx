@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import logo from '../../assets/logo.webp';
+import logo from '../../assets/logo.png';
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -10,36 +10,60 @@ export default function Login() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    // ป้องกัน useEffect วนลูป: รันแค่รอบแรก
     if (localStorage.getItem('token')) {
-      navigate('/home')
+      navigate('/home');
     }
-  }, [navigate])
+    // eslint-disable-next-line
+  }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    try {
-      const res = await fetch('https://student-main-behavior-backend.onrender.com/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setError(data.message || 'Login failed')
-      } else {
-        // บันทึก token ใน localStorage หรือ state ตามต้องการ
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('user', JSON.stringify(data.user))
-        navigate('/home')
+    e.preventDefault();
+    if (loading) return;
+
+    setError('');
+    setLoading(true);
+
+    const maxRetries = 3;
+    const retryDelay = 3000; // 3 seconds
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const res = await fetch('https://student-main-behavior-backend.onrender.com/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          navigate('/home');
+          return;
+        }
+
+        if (res.status === 500) {
+          if (attempt < maxRetries) {
+            setError(`เซิร์ฟเวอร์อาจกำลังเริ่มทำงาน... (ลองใหม่ครั้งที่ ${attempt})`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+          } else {
+            setError('เกิดข้อผิดพลาดที่เซิร์ฟเวอร์ โปรดรอสักครู่แล้วลองใหม่อีกครั้ง');
+            break; // Exit loop after last attempt
+          }
+        } else {
+          const data = await res.json().catch(() => ({}));
+          setError(data.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+          break; // Exit loop for non-500 errors
+        }
+      } catch (err) {
+        setError('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
+        break; // Exit loop on network error
       }
-    } catch (err) {
-      // ไม่แสดง error อะไรเลยถ้า network error
-    } finally {
-      setLoading(false)
     }
-  }
+
+    setLoading(false);
+  };
 
   return (
     <div style={{ maxWidth: 600, margin: '20px auto', padding: 24, border: '1px solid #eee', borderRadius: 8, background: '#fff', boxShadow: '0 2px 16px 0 #f8bbd044' , marginTop: '150px'}}>

@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Dictionary ฐานข้อมูลระบบนักเรียน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', 'Sarabun', Arial, sans-serif; background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%); margin: 0; padding: 0; }
+        h1 { text-align: center; margin-top: 36px; font-weight: 700; letter-spacing: 1.5px; color: #2d3a4a; text-shadow: 0 2px 8px #b6c6e6; }
+        .container { max-width: 1200px; margin: 48px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px #b6c6e633, 0 1.5px 4px #0001; padding: 40px 32px 32px 32px; }
+        .table-title { margin-top: 48px; margin-bottom: 14px; font-size: 1.35em; color: #2563eb; font-weight: 700; letter-spacing: 0.7px; text-shadow: 0 1px 4px #e0e7ff; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 48px; font-size: 1.08em; background: #f9fbff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px #e0e7ff; }
+        th, td { border: none; padding: 14px 16px; text-align: left; transition: background 0.2s; }
+        th { background: linear-gradient(90deg, #2563eb 80%, #60a5fa 100%); color: #fff; font-weight: 600; letter-spacing: 0.7px; font-size: 1.07em; }
+        tr { transition: box-shadow 0.2s, background 0.2s; }
+        tr:not(:first-child):hover { background: #e0e7ff; box-shadow: 0 2px 8px #b6c6e633; }
+        tr:nth-child(even) td { background: #f3f6fb; }
+        tr:nth-child(odd) td { background: #f9fbff; }
+        td { color: #2d3a4a; font-size: 1em; }
+        @media (max-width: 900px) {
+            .container { padding: 16px 4vw; }
+            table, th, td { font-size: 0.98em; }
+            .table-title { font-size: 1.1em; }
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.2em; }
+            .container { padding: 4vw 0.5vw; }
+            table, th, td { font-size: 0.92em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Dictionary ฐานข้อมูลระบบนักเรียน</h1>
+    <div class="container">
+        <!-- ตาราง students -->
+        <div class="table-title">ตาราง: students (ข้อมูลนักเรียน)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสนักเรียน (Primary Key)</td></tr>
+            <tr><td>student_code</td><td>varchar(20)</td><td>รหัสประจำตัวนักเรียน (ไม่ซ้ำ)</td></tr>
+            <tr><td>first_name</td><td>varchar(100)</td><td>ชื่อจริง</td></tr>
+            <tr><td>last_name</td><td>varchar(100)</td><td>นามสกุล</td></tr>
+            <tr><td>gender</td><td>enum('male','female','other')</td><td>เพศ</td></tr>
+            <tr><td>class_level</td><td>varchar(20)</td><td>ระดับชั้น</td></tr>
+            <tr><td>birthdate</td><td>date</td><td>วันเกิด</td></tr>
+            <tr><td>guardian_name</td><td>varchar(100)</td><td>ชื่อผู้ปกครอง</td></tr>
+            <tr><td>guardian_relation</td><td>enum('มารดา','บิดา','ญาติ','พี่น้อง')</td><td>ความสัมพันธ์กับผู้ปกครอง</td></tr>
+            <tr><td>contact_info</td><td>varchar(255)</td><td>ข้อมูลติดต่อ</td></tr>
+            <tr><td>advisor_name</td><td>varchar(100)</td><td>ชื่อที่ปรึกษา</td></tr>
+            <tr><td>class_room</td><td>varchar(20)</td><td>ห้องเรียน</td></tr>
+            <tr><td>created_at</td><td>datetime</td><td>วันที่เพิ่มข้อมูล</td></tr>
+        </table>
+        <!-- ตาราง admins -->
+        <div class="table-title">ตาราง: admins (ผู้ดูแล/ครู/ที่ปรึกษา)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสผู้ดูแล (Primary Key)</td></tr>
+            <tr><td>username</td><td>varchar(50)</td><td>ชื่อผู้ใช้ (ไม่ซ้ำ)</td></tr>
+            <tr><td>password</td><td>varchar(255)</td><td>รหัสผ่าน (เข้ารหัส)</td></tr>
+            <tr><td>full_name</td><td>varchar(100)</td><td>ชื่อ-นามสกุล</td></tr>
+            <tr><td>email</td><td>varchar(100)</td><td>อีเมล</td></tr>
+            <tr><td>role</td><td>enum('admin','teacher','headteacher')</td><td>บทบาท (admin=ผู้ดูแล, teacher=ครู, headteacher=หัวหน้าครู)</td></tr>
+            <tr><td>created_at</td><td>datetime</td><td>วันที่เพิ่มข้อมูล</td></tr>
+        </table>
+        <!-- ตาราง behaviors -->
+        <div class="table-title">ตาราง: behaviors (พฤติกรรม)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสพฤติกรรม (Primary Key)</td></tr>
+            <tr><td>behavior_name</td><td>varchar(100)</td><td>ชื่อพฤติกรรม</td></tr>
+            <tr><td>description</td><td>text</td><td>รายละเอียด</td></tr>
+            <tr><td>severity_level</td><td>enum('ร้ายแรง','ไม่ร้ายแรง')</td><td>ระดับความรุนแรง</td></tr>
+            <tr><td>type</td><td>enum('ความรุนแรง','ระเบียบวินัย','เพศวิถี','สิ่งเสพติด')</td><td>ประเภทพฤติกรรม</td></tr>
+            <tr><td>created_at</td><td>datetime</td><td>วันที่เพิ่มข้อมูล</td></tr>
+        </table>
+        <!-- ตาราง cases -->
+        <div class="table-title">ตาราง: cases (กรณี/เหตุการณ์)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสกรณี (Primary Key)</td></tr>
+            <tr><td>student_id</td><td>int</td><td>รหัสนักเรียน (Foreign Key)</td></tr>
+            <tr><td>behavior_id</td><td>int</td><td>รหัสพฤติกรรม (Foreign Key)</td></tr>
+            <tr><td>reported_by</td><td>int</td><td>รหัสผู้รายงาน (Foreign Key)</td></tr>
+            <tr><td>case_description</td><td>text</td><td>รายละเอียดกรณี</td></tr>
+            <tr><td>round</td><td>enum('1','2','3')</td><td>รอบ</td></tr>
+            <tr><td>action_plan</td><td>enum('ควบคุมพฤติกรรม','เรียนผ่านช่องทาง W.T.S Platform','เข้าคณะ School Credits')</td><td>แผนการดำเนินการ</td></tr>
+            <tr><td>status</td><td>enum('open','in_progress','closed')</td><td>สถานะ</td></tr>
+            <tr><td>reported_at</td><td>datetime</td><td>วันที่รายงาน</td></tr>
+            <tr><td>updated_at</td><td>datetime</td><td>วันที่อัปเดตล่าสุด</td></tr>
+        </table>
+        <!-- ตาราง attachments -->
+        <div class="table-title">ตาราง: attachments (ไฟล์แนบ)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสไฟล์แนบ (Primary Key)</td></tr>
+            <tr><td>case_id</td><td>int</td><td>รหัสกรณี (Foreign Key)</td></tr>
+            <tr><td>file_path</td><td>varchar(255)</td><td>ที่อยู่ไฟล์</td></tr>
+            <tr><td>file_type</td><td>varchar(50)</td><td>ประเภทไฟล์</td></tr>
+            <tr><td>uploaded_at</td><td>datetime</td><td>วันที่อัปโหลด</td></tr>
+        </table>
+        <!-- ตาราง case_logs -->
+        <div class="table-title">ตาราง: case_logs (บันทึกเหตุการณ์)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสบันทึก (Primary Key)</td></tr>
+            <tr><td>case_id</td><td>int</td><td>รหัสกรณี (Foreign Key)</td></tr>
+            <tr><td>action_by</td><td>int</td><td>รหัสผู้ดำเนินการ (Foreign Key)</td></tr>
+            <tr><td>note</td><td>text</td><td>หมายเหตุ</td></tr>
+            <tr><td>action_date</td><td>datetime</td><td>วันที่ดำเนินการ</td></tr>
+        </table>
+        <!-- ตาราง login_logs -->
+        <div class="table-title">ตาราง: login_logs (บันทึกการเข้าสู่ระบบ)</div>
+        <table>
+            <tr>
+                <th>ชื่อคอลัมน์</th>
+                <th>ประเภทข้อมูล</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr><td>id</td><td>int</td><td>รหัสบันทึก (Primary Key)</td></tr>
+            <tr><td>admin_id</td><td>int</td><td>รหัสผู้ดูแล (Foreign Key)</td></tr>
+            <tr><td>login_time</td><td>datetime</td><td>เวลาที่เข้าสู่ระบบ</td></tr>
+            <tr><td>ip_address</td><td>varchar(45)</td><td>IP Address</td></tr>
+            <tr><td>user_agent</td><td>text</td><td>User Agent</td></tr>
+            <tr><td>status</td><td>enum('success','failed')</td><td>สถานะ</td></tr>
+        </table>
+    </div>
+</body>
+</html>

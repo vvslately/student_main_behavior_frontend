@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRef, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import logo from '../../assets/logo.webp';
+import logo from '../../assets/logo.png';
 
 const menuItems = [
   { to: '/home', label: 'หน้าแรก' },
