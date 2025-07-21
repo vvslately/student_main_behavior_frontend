@@ -100,7 +100,28 @@ export default function Cases() {
   // Filter by name and room (frontend)
   const filteredCases = cases.filter(c => {
     const nameMatch = `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase().includes(searchName.toLowerCase());
-    const roomMatch = searchRoom.trim() === '' || (c.class_room || '').toLowerCase().includes(searchRoom.toLowerCase());
+    // Normalize class_level and class_room for search
+    const classLevelStr = String(c.class_level);
+    const classLevelLabel = c.class_level ? `ม.${c.class_level}` : '';
+    const classRoomStr = String(c.class_room || '');
+    const searchRoomTrim = searchRoom.trim();
+
+    // Support search like '6/4' or 'ม.6/4'
+    let roomMatch = false;
+    if (searchRoomTrim.includes('/')) {
+      // Split by /
+      const [searchLevel, searchRoomNum] = searchRoomTrim.replace('ม.', '').split('/');
+      roomMatch = (
+        (classLevelStr === searchLevel.trim() || classLevelLabel === `ม.${searchLevel.trim()}`)
+        && classRoomStr === searchRoomNum.trim()
+      );
+    } else {
+      roomMatch =
+        searchRoomTrim === '' ||
+        classLevelStr.includes(searchRoomTrim) ||
+        classLevelLabel.includes(searchRoomTrim) ||
+        classRoomStr.includes(searchRoomTrim);
+    }
     return nameMatch && roomMatch;
   });
 
@@ -216,7 +237,7 @@ export default function Cases() {
             + เพิ่มเคส
           </button>
         </div>
-        <div style={{ display: 'flex', gap: 14, marginBottom: 18, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 14, marginBottom: 18, flexWrap: 'nowrap', alignItems: 'center', overflowX: 'auto' }}>
           <input
             type="text"
             placeholder="ค้นหาชื่อเคส, รายละเอียด, สถานะ"
@@ -238,26 +259,28 @@ export default function Cases() {
             onChange={e => setSearchRoom(e.target.value)}
             style={{ padding: 10, borderRadius: 8, border: '1px solid #cbd5e1', minWidth: 120, fontSize: 16 }}
           />
-          <button
-            onClick={() => exportToCSV(filteredCases.filter(c => selected.includes(c.id)))}
-            disabled={!selected.length}
-            style={{ background: selected.length ? '#10b981' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontWeight: 700, fontSize: 16, boxShadow: selected.length ? '0 2px 8px #10b98133' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s'  }}
-          >
-            Export CSV
-          </button>
-          <PDFDownloadLink
-            document={<CasePDFDocument rows={filteredCases.filter(c => selected.includes(c.id))} />}
-            fileName="cases_export.pdf"
-          >
-            {({ loading }) => (
-              <button
-                disabled={!selected.length}
-                style={{ background: selected.length ? '#ef4444' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontWeight: 700, fontSize: 16, boxShadow: selected.length ? '0 2px 8px #ef444433' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s' }}
-              >
-                {loading ? 'กำลังสร้าง PDF...' : 'Export PDF'}
-              </button>
-            )}
-          </PDFDownloadLink>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => exportToCSV(filteredCases.filter(c => selected.includes(c.id)))}
+              disabled={!selected.length}
+              style={{ background: selected.length ? '#10b981' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px', fontWeight: 700, fontSize: 16, minWidth: 120, height: 50, boxShadow: selected.length ? '0 2px 8px #10b98133' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s'  }}
+            >
+              Export CSV
+            </button>
+            <PDFDownloadLink
+              document={<CasePDFDocument rows={filteredCases.filter(c => selected.includes(c.id))} />}
+              fileName="cases_export.pdf"
+            >
+              {({ loading }) => (
+                <button
+                  disabled={!selected.length}
+                  style={{ background: selected.length ? '#ef4444' : '#cbd5e1', color: '#fff', border: 'none', borderRadius: 8, padding: '10px', fontWeight: 700, fontSize: 16, minWidth: 120, height: 50, boxShadow: selected.length ? '0 2px 8px #ef444433' : 'none', cursor: selected.length ? 'pointer' : 'not-allowed', transition: 'background 0.2s, box-shadow 0.2s' }}
+                >
+                  {loading ? 'กำลังสร้าง PDF...' : 'Export PDF'}
+                </button>
+              )}
+            </PDFDownloadLink>
+          </div>
         </div>
         {loading ? (
           <SkeletonTable />

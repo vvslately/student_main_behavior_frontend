@@ -273,7 +273,7 @@ export default function Admins() {
         margin: '0 0',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-          <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--color-primary)', letterSpacing: 1, margin: 0 }}>จัดการผู้ใช้</h2>
+          <h2 style={{ fontWeight: 800, fontSize: 32, color: '#222', letterSpacing: 1, margin: 0 }}>จัดการผู้ใช้</h2>
           <button
             onClick={() => setAddModalOpen(true)}
             style={{ background: 'var(--color-primary)', color: 'var(--color-primary-contrast)', padding: '8px 16px', borderRadius: 10, fontWeight: 700, fontSize: 15, boxShadow: '0 2px 8px var(--color-primary-light)', transition: 'background 0.2s', border: 'none', cursor: 'pointer', width: '100%', maxWidth: 200 }}
