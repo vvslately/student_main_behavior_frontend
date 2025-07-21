@@ -8,7 +8,7 @@ import Cases from './pages/cases'
 import Students from './pages/students'
 import Admins from './pages/admins'
 import Menu from './components/menu'
-import LoginLogs from './pages/logs'
+import LoginLogs from './pages/logs_page'
 
 function App() {
   return (
