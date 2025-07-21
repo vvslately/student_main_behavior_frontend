@@ -46,6 +46,10 @@ export default function LoginLogs() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const logsPerPage = 5;
+  const totalPages = Math.ceil(logs.length / logsPerPage);
+  const paginatedLogs = logs.slice((currentPage - 1) * logsPerPage, currentPage * logsPerPage);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -55,7 +59,7 @@ export default function LoginLogs() {
       return;
     }
     fetch('https://student-main-behavior-backend.onrender.com/api/login-logs/me', {
-      headers: {
+      headers: {  
         'Authorization': 'Bearer ' + token
       }
     })
@@ -114,12 +118,13 @@ export default function LoginLogs() {
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>IP Address</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>User Agent</th>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>สถานะ</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>ดูแผนที่</th>
                 </tr>
               </thead>
               <tbody>
                 {logs.length === 0 ? (
-                  <tr><td colSpan={7} style={{ textAlign: 'center', padding: 24 }}>ไม่มีข้อมูล</td></tr>
-                ) : logs.map((log, i) => (
+                  <tr><td colSpan={8} style={{ textAlign: 'center', padding: 24 }}>ไม่มีข้อมูล</td></tr>
+                ) : paginatedLogs.map((log, i) => (
                   <tr key={log.id}>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{i + 1}</td>
                     <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{log.username || '-'}</td>
@@ -134,10 +139,41 @@ export default function LoginLogs() {
                         <span style={{ color: '#ef4444', fontWeight: 700 }}>ล้มเหลว</span>
                       )}
                     </td>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
+                      {log.ip_address ? (
+                        <a
+                          href={`https://ipinfo.io/${log.ip_address.split(',')[0].trim()}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: '#2563eb', textDecoration: 'underline', fontWeight: 600 }}
+                        >
+                          ดูแผนที่
+                        </a>
+                      ) : '-'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                style={{ marginRight: 8, padding: '6px 16px', borderRadius: 6, border: '1px solid #2563eb', background: currentPage === 1 ? '#e5e7eb' : '#2563eb', color: currentPage === 1 ? '#888' : '#fff', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+              >
+                ก่อนหน้า
+              </button>
+              <span style={{ alignSelf: 'center', fontWeight: 600 }}>
+                หน้า {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                style={{ marginLeft: 8, padding: '6px 16px', borderRadius: 6, border: '1px solid #2563eb', background: currentPage === totalPages ? '#e5e7eb' : '#2563eb', color: currentPage === totalPages ? '#888' : '#fff', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+              >
+                ถัดไป
+              </button>
+            </div>
           </div>
         )}
       </div>
