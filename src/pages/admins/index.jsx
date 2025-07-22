@@ -116,7 +116,7 @@ function AddAdminModal({ onClose, onSave }) {
           <select name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }}>
             <option value="admin">admin</option>
             <option value="teacher">teacher</option>
-            <option value="counselor">counselor</option>
+            <option value="headteacher">headteacher</option>
           </select>
         </div>
         {error && <div style={{ color: 'var(--color-status-error)', marginBottom: 8 }}>{error}</div>}
@@ -185,7 +185,7 @@ function EditAdminModal({ admin, onClose, onSave }) {
           <select name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: 8, marginTop: 4, borderRadius: 6, border: '1px solid var(--color-border-light)' }}>
             <option value="admin">admin</option>
             <option value="teacher">teacher</option>
-            <option value="counselor">counselor</option>
+            <option value="headteacher">headteacher</option>
           </select>
         </div>
         {error && <div style={{ color: 'var(--color-status-error)', marginBottom: 8 }}>{error}</div>}
