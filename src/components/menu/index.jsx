@@ -119,7 +119,7 @@ export default function Menu() {
           width: isMobile ? '80vw' : 320,
           minWidth: isMobile ? '0' : 320,
           maxWidth: 400,
-          minHeight: '100vh',
+          height: isMobile ? '100vh' : '100vh',
           background: 'var(--gradient-background)',
           borderRight: 'none',
           border: 'none',
@@ -136,7 +136,8 @@ export default function Menu() {
             : 'none',
           fontFamily: 'Prompt, Inter, "Segoe UI", Arial, sans-serif',
           transition: 'left 0.38s cubic-bezier(.4,2,.6,1), box-shadow 0.3s',
-          overflowY: 'auto', // เปลี่ยนจาก overflow: 'hidden' เป็น overflowY: 'auto'
+          overflowY: 'auto',
+          overflowX: 'hidden',
         }}
       >
         <div style={{ flex: '1 1 0%', overflowY: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
@@ -254,15 +255,17 @@ export default function Menu() {
             width: 80vw !important;
             min-width: 0 !important;
             max-width: 100vw !important;
-            min-height: 100vh !important;
+            height: 100vh !important;
             flex-direction: column !important;
             padding: 24px 0 24px 0 !important;
             position: fixed !important;
             top: 0; left: 0; right: auto;
             box-shadow: 4px 0 24px 0 var(--color-border-light);
             z-index: 200;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
             transition: left 0.38s cubic-bezier(.4,2,.6,1);
+            -webkit-overflow-scrolling: touch;
           }
           aside nav ul {
             flex-direction: column !important;
@@ -280,15 +283,29 @@ export default function Menu() {
           scrollbar-color: var(--color-primary) #f0f0f0;
         }
         aside::-webkit-scrollbar {
-          width: 10px;
+          width: 8px;
         }
         aside::-webkit-scrollbar-thumb {
           background: var(--color-primary);
-          border-radius: 8px;
+          border-radius: 6px;
         }
         aside::-webkit-scrollbar-track {
-          background: #f0f0f0;
-          border-radius: 8px;
+          background: rgba(240, 240, 240, 0.3);
+          border-radius: 6px;
+        }
+        /* Mobile scrollbar optimization */
+        @media (max-width: 700px) {
+          aside::-webkit-scrollbar {
+            width: 6px;
+          }
+          aside::-webkit-scrollbar-thumb {
+            background: var(--color-primary-light);
+            border-radius: 4px;
+          }
+          aside::-webkit-scrollbar-track {
+            background: rgba(240, 240, 240, 0.2);
+            border-radius: 4px;
+          }
         }
       `}</style>
     </>
