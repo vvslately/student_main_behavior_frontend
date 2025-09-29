@@ -4,7 +4,7 @@ function SkeletonTable() {
   // 7 columns for login logs
   return (
     <div style={{ width: '100%', overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
+      <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
             {[...Array(7)].map((_, i) => (
@@ -79,10 +79,9 @@ export default function LoginLogs() {
 
   return (
     <div style={{
-      maxWidth: 1200,
-      margin: '80px auto',
-      marginLeft: 0,
-      padding: 0,
+      width: '100%',
+      margin: '80px 0 0 0',
+      padding: '0 16px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'flex-start',
@@ -91,12 +90,11 @@ export default function LoginLogs() {
     }}>
       <div style={{
         width: '100%',
-        maxWidth: 1100,
         background: 'var(--card-bg, #fff)',
         borderRadius: 18,
         boxShadow: '0 4px 32px 0 #2563eb18',
         padding: 32,
-        margin: '0 0',
+        margin: '0',
         border: '1px solid #e5e7eb',
         position: 'relative',
         transition: 'box-shadow 0.3s',
@@ -108,7 +106,7 @@ export default function LoginLogs() {
           <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }}>
+            <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }}>
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>ลำดับ</th>

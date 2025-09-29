@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 function SkeletonTable() {
   return (
     <div style={{ width: '100%', overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
+      <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
             {[...Array(5)].map((_, i) => (
@@ -227,10 +227,9 @@ export default function Behaviors() {
 
   return (
     <div className="container-behaviors" style={{
-      maxWidth: 1100,
-      margin: '80px auto',
-      marginLeft: 50,
-      padding: 0,
+      width: '100%',
+      margin: '80px 0 0 0',
+      padding: '0 16px',
       background: 'transparent',
       display: 'flex',
       justifyContent: 'center',
@@ -247,10 +246,7 @@ export default function Behaviors() {
         border: '1px solid #e5e7eb',
         position: 'relative',
         transition: 'box-shadow 0.3s',
-        maxWidth: 1100,
-        
-
-        margin: '0 0',
+        margin: '0',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 } }>
           <h2 style={{ fontWeight: 800, fontSize: 32, color: 'var(--primary, #2563eb)', letterSpacing: 1, margin: 0, color: '#222' }}>จัดการพฤติกรรม</h2>
@@ -268,7 +264,7 @@ export default function Behaviors() {
           <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s', minWidth: 600 }}>
+            <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }}>
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
                   <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>#</th>
@@ -378,7 +374,6 @@ export default function Behaviors() {
         }
         @media (max-width: 900px) {
           .container-behaviors {
-            margin-left: 0 !important;
             padding: 0 8px !important;
           }
           .card-behaviors {
@@ -400,7 +395,7 @@ export default function Behaviors() {
           }
           table {
             font-size: 12px !important;
-            min-width: 400px !important;
+            min-width: 100% !important;
           }
           th, td {
             padding: 6px !important;

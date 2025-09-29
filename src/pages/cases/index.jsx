@@ -612,10 +612,9 @@ export default function Cases() {
 
   return (
     <div style={{
-      maxWidth: 1200,
-      margin: '80px auto',
-      marginLeft: 0,
-      padding: 0,
+      width: '100%',
+      margin: '80px 0 0 0',
+      padding: '0 16px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'flex-start',
@@ -624,12 +623,11 @@ export default function Cases() {
     }}>
       <div style={{
         width: '100%',
-        maxWidth: 1100,
         background: 'var(--card-bg, #fff)',
         borderRadius: 18,
         boxShadow: '0 4px 32px 0 #2563eb18',
         padding: 32,
-        margin: '0 0',
+        margin: '0',
         border: '1px solid #e5e7eb',
         position: 'relative',
         transition: 'box-shadow 0.3s',
@@ -756,7 +754,7 @@ export default function Cases() {
           <div style={{ color: 'red', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }} className="cases-table-scroll">
-            <table style={{ width: '100%', minWidth: 1200, borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }} className="cases-table-responsive">
+            <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 15, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }} className="cases-table-responsive">
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
                   {/* เพิ่ม checkbox ที่หัวตาราง */}
@@ -894,7 +892,7 @@ export default function Cases() {
         @media (max-width: 700px) {
           .cases-table-responsive {
             font-size: 13px !important;
-            min-width: 900px !important;
+            min-width: 100% !important;
           }
           .cases-table-responsive th, .cases-table-responsive td {
             padding: 7px !important;
@@ -912,14 +910,9 @@ export default function Cases() {
             font-size: 15px !important;
             padding: 7px !important;
           }
-          .cases-table-responsive {
-            min-width: 600px;
-          }
           .cases-table-scroll {
             overflow-x: auto;
-            width: 100vw;
-            margin-left: -16px;
-            padding-left: 8px;
+            width: 100%;
           }
           .cases-table-responsive +div>button.btn.btn-primary, .cases-table-responsive ~ button.btn.btn-primary, .cases-table-responsive ~ div>button.btn.btn-primary {
             width: 100% !important;
@@ -937,7 +930,7 @@ function SkeletonTable() {
   // 5 rows, 11 cols
   return (
     <div style={{ width: '100%', overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
+      <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
             {/* 14 columns: checkbox, #, ประเภท, รายละเอียด, นักเรียน, ชั้น, ห้อง, พฤติกรรม, รอบ, แผนการดำเนินการ, ผู้รายงาน, สถานะ, วันที่รายงาน, การจัดการ */}

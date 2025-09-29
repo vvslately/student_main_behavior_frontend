@@ -22,7 +22,7 @@ const DeleteIcon = ({size=20}) => (
 function SkeletonTable() {
   return (
     <div style={{ width: '100%', overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
+      <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
             {[...Array(7)].map((_, i) => (
@@ -253,10 +253,9 @@ export default function Admins() {
 
   return (
     <div className="container-admins" style={{
-      maxWidth: 1100,
-      margin: '80px auto',
-      marginLeft: 50,
-      padding: 0,
+      width: '100%',
+      margin: '80px 0 0 0',
+      padding: '0 16px',
       background: 'transparent',
     }}>
       <div className="card-admins" style={{
@@ -268,9 +267,7 @@ export default function Admins() {
         border: '1px solid #e5e7eb',
         position: 'relative',
         transition: 'box-shadow 0.3s',
-        marginTop: 50,
-        maxWidth: 1100,
-        margin: '0 0',
+        margin: '0',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
           <h2 style={{ fontWeight: 800, fontSize: 32, color: '#222', letterSpacing: 1, margin: 0 }}>จัดการผู้ใช้</h2>
@@ -287,7 +284,7 @@ export default function Admins() {
           <div style={{ color: 'var(--color-status-error)', padding: 24, textAlign: 'center' }}>{error}</div>
         ) : (
           <div style={{ overflowX: 'auto', transition: 'box-shadow 0.3s' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px var(--color-primary-light)', transition: 'box-shadow 0.3s', tableLayout: 'fixed' }}>
+            <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px var(--color-primary-light)', transition: 'box-shadow 0.3s' }}>
               <colgroup>
                 <col style={{ width: '4%' }} />
                 <col style={{ width: '16%' }} />
@@ -420,7 +417,6 @@ export default function Admins() {
         }
         @media (max-width: 900px) {
           .container-admins {
-            margin-left: 0 !important;
             padding: 0 8px !important;
           }
           .card-admins {
@@ -442,7 +438,7 @@ export default function Admins() {
           }
           table {
             font-size: 12px !important;
-            min-width: 400px !important;
+            min-width: 100% !important;
           }
           th, td {
             padding: 6px !important;
