@@ -144,7 +144,7 @@ export default function Home() {
                   <StatCard label="นักเรียนทั้งหมด" value={stats.students} color="#2563eb" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
-                  <StatCard label="ผู้ใช้ (Admin/Teacher/Counselor)" value={stats.admins} color="#f59e42" />
+                  <StatCard label="ผู้ใช้" value={stats.admins} color="#f59e42" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
                   <StatCard label="พฤติกรรมที่มีการบันทึก" value={stats.behaviors} color="#10b981" />
