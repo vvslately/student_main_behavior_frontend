@@ -8,7 +8,7 @@ function SkeletonTable() {
       <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
         <thead>
           <tr style={{ background: 'var(--table-head, #f1f5f9)' }}>
-            {[...Array(5)].map((_, i) => (
+            {[...Array(7)].map((_, i) => (
               <th key={i} style={{ padding: 10, border: '1px solid #e5e7eb' }}>&nbsp;</th>
             ))}
           </tr>
@@ -16,7 +16,7 @@ function SkeletonTable() {
         <tbody>
           {[...Array(5)].map((_, r) => (
             <tr key={r}>
-              {[...Array(5)].map((_, c) => (
+              {[...Array(7)].map((_, c) => (
                 <td key={c} style={{ padding: 10, border: '1px solid #e5e7eb' }}>
                   <div style={{
                     height: 16,
@@ -267,27 +267,15 @@ export default function Behaviors() {
             <table style={{ width: '100%', minWidth: '100%', borderCollapse: 'collapse', fontSize: 16, background: 'transparent', borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 8px #2563eb11', transition: 'box-shadow 0.3s' }}>
               <thead>
                 <tr style={{ background: 'var(--table-head, #f1f5f9)', transition: 'background 0.3s' }}>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>#</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ชื่อพฤติกรรม</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รายละเอียด</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ระดับความรุนแรง</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th> {/* เพิ่มคอลัมน์ประเภท */}
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>วันที่สร้าง</th>
-                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>การดำเนินการ</th>
+                  <th style={{ padding: 10, border: '1px solid #e5e7eb' }}>#</th><th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ชื่อพฤติกรรม</th><th style={{ padding: 10, border: '1px solid #e5e7eb' }}>รายละเอียด</th><th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ระดับความรุนแรง</th><th style={{ padding: 10, border: '1px solid #e5e7eb' }}>ประเภท</th><th style={{ padding: 10, border: '1px solid #e5e7eb' }}>วันที่สร้าง</th><th style={{ padding: 10, border: '1px solid #e5e7eb' }}>การดำเนินการ</th>
                 </tr>
               </thead>
               <tbody>
                 {behaviors.length === 0 ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>ไม่มีข้อมูล</td></tr>
+                  <tr><td colSpan={7} style={{ textAlign: 'center', padding: 20 }}>ไม่มีข้อมูล</td></tr>
                 ) : behaviors.map((b, i) => (
                   <tr key={b.id}>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{i + 1}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.behavior_name}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.description || '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.severity_level}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.type || '-'}</td> {/* แสดงประเภท */}
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.created_at ? b.created_at.split('T')[0] : '-'}</td>
-                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
+                    <td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{i + 1}</td><td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.behavior_name}</td><td style={{ padding: 10, border: '1px solid #e5e7eb' }}>{b.description || '-'}</td><td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.severity_level}</td><td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.type || '-'}</td><td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>{b.created_at ? b.created_at.split('T')[0] : '-'}</td><td style={{ padding: 10, border: '1px solid #e5e7eb', textAlign: 'center' }}>
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
                           onClick={() => setEditModal({ open: true, behavior: b })}

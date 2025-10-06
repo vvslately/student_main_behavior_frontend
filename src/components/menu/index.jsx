@@ -116,21 +116,21 @@ export default function Menu() {
       <aside
         ref={sidebarRef}
         style={{
-          width: isMobile ? '80vw' : 320,
-          minWidth: isMobile ? '0' : 320,
-          maxWidth: 400,
-          height: isMobile ? '100vh' : '100vh',
+          width: isMobile ? '85vw' : 320,
+          minWidth: isMobile ? '280px' : 320,
+          maxWidth: isMobile ? '350px' : 400,
+          height: '100vh',
           background: 'var(--gradient-background)',
           borderRight: 'none',
           border: 'none',
-          padding: isMobile ? '24px 0 24px 0' : '48px 0',
-          position: isMobile ? 'fixed' : 'fixed',
+          padding: isMobile ? '20px 0 20px 0' : '48px 0',
+          position: 'fixed',
           top: 0,
           left: open ? 0 : isMobile ? '-100vw' : 0,
           zIndex: 200,
           display: 'flex',
           flexDirection: 'column',
-          gap: 12,
+          gap: 8,
           boxShadow: open
             ? '4px 0 24px 0 var(--color-border-light)'
             : 'none',
@@ -140,41 +140,60 @@ export default function Menu() {
           overflowX: 'hidden',
         }}
       >
-        <div style={{ flex: '1 1 0%', overflowY: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            margin: isMobile ? '0 18px 32px 18px' : '0 32px 40px 32px',
-            paddingTop: 0
+        {/* Header Section - Fixed */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          margin: isMobile ? '0 16px 24px 16px' : '0 24px 32px 24px',
+          paddingTop: 0,
+          flexShrink: 0
+        }}>
+          <img
+            src={logo}
+            alt="โลโก้"
+            style={{
+              width: isMobile ? 120 : 150,
+              height: 'auto',
+              objectFit: 'contain',
+              marginBottom: 8,
+              marginTop: 0
+            }}
+          />
+          <span style={{
+            fontWeight: 800,
+            fontSize: isMobile ? 24 : 32,
+            color: 'var(--color-primary-light)',
+            letterSpacing: 1,
+            fontFamily: 'inherit',
+            textShadow: '0 2px 8px var(--color-primary-contrast)',
+            marginTop: 0,
+            textAlign: 'center',
+            lineHeight: 1.2
           }}>
-            <img
-              src={logo}
-              alt="โลโก้"
-              style={{
-                width: 150,
-                height: 'auto',
-                objectFit: 'contain',
-                marginBottom: 8,
-                marginTop: 0
-              }}
-            />
-            <span style={{
-              fontWeight: 800,
-              fontSize: 32,
-              color: 'var(--color-primary-light)',
-              letterSpacing: 1,
-              fontFamily: 'inherit',
-              textShadow: '0 2px 8px var(--color-primary-contrast)',
-              marginTop: 0,
-              textAlign: 'center'
-            }}>
-              ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
-            </span>
-          </div>
+            ระบบข้อมูลการบันทึกพฤติกรรมนักเรียน
+          </span>
+        </div>
+
+        {/* Scrollable Content */}
+        <div style={{ 
+          flex: '1 1 0%', 
+          overflowY: 'auto', 
+          minHeight: 0, 
+          display: 'flex', 
+          flexDirection: 'column',
+          paddingBottom: isMobile ? 20 : 24
+        }}>
           <nav>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <ul style={{ 
+              listStyle: 'none', 
+              padding: 0, 
+              margin: 0, 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: isMobile ? 12 : 16 
+            }}>
               {filteredMenuItems.map((item, idx) => (
                 <li key={item.to} style={{position:'relative'}}>
                   <MenuLink
@@ -190,44 +209,58 @@ export default function Menu() {
             </ul>
           </nav>
         </div>
-        {/* Logout button moved after scrollable content, always at the bottom */}
-        <button
-          onClick={async () => {
-            const result = await Swal.fire({
-              title: 'ยืนยันการออกจากระบบ',
-              text: 'คุณต้องการออกจากระบบใช่หรือไม่?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: 'var(--color-primary)',
-              cancelButtonColor: 'var(--color-status-error)',
-              confirmButtonText: 'ใช่, ออกจากระบบ',
-              cancelButtonText: 'ยกเลิก',
-            });
-            if (result.isConfirmed) {
-              localStorage.removeItem('user');
-              localStorage.removeItem('token');
-              navigate('/login');
-            }
-          }}
-          style={{
-            width: '90%',
-            margin: '24px auto 0 auto',
-            padding: '12px 0',
-            background: 'var(--gradient-primary)',
-            color: 'var(--color-primary-contrast)',
-            border: 'none',
-            borderRadius: 8,
-            fontWeight: 600,
-            fontSize: 16,
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px 0 var(--color-border-light)',
-            transition: 'background 0.2s, color 0.2s',
-            display: 'block',
-            marginTop: 'auto',
-          }}
-        >
-          ออกจากระบบ
-        </button>
+        {/* Logout button - Fixed at bottom */}
+        <div style={{
+          flexShrink: 0,
+          padding: isMobile ? '16px 16px 0 16px' : '24px 24px 0 24px',
+          marginTop: 'auto'
+        }}>
+          <button
+            onClick={async () => {
+              const result = await Swal.fire({
+                title: 'ยืนยันการออกจากระบบ',
+                text: 'คุณต้องการออกจากระบบใช่หรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--color-primary)',
+                cancelButtonColor: 'var(--color-status-error)',
+                confirmButtonText: 'ใช่, ออกจากระบบ',
+                cancelButtonText: 'ยกเลิก',
+              });
+              if (result.isConfirmed) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                navigate('/login');
+              }
+            }}
+            style={{
+              width: '100%',
+              padding: isMobile ? '14px 0' : '16px 0',
+              background: 'var(--gradient-primary)',
+              color: 'var(--color-primary-contrast)',
+              border: 'none',
+              borderRadius: 12,
+              fontWeight: 600,
+              fontSize: isMobile ? 15 : 16,
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px 0 var(--color-primary-light)',
+              transition: 'all 0.2s ease',
+              display: 'block',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px 0 var(--color-primary-light)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px 0 var(--color-primary-light)';
+            }}
+          >
+            ออกจากระบบ
+          </button>
+        </div>
       </aside>
       {/* Overlay for mobile */}
       {isMobile && open && (
@@ -252,12 +285,12 @@ export default function Menu() {
         }
         @media (max-width: 700px) {
           aside {
-            width: 80vw !important;
-            min-width: 0 !important;
-            max-width: 100vw !important;
+            width: 85vw !important;
+            min-width: 280px !important;
+            max-width: 350px !important;
             height: 100vh !important;
             flex-direction: column !important;
-            padding: 24px 0 24px 0 !important;
+            padding: 20px 0 20px 0 !important;
             position: fixed !important;
             top: 0; left: 0; right: auto;
             box-shadow: 4px 0 24px 0 var(--color-border-light);
@@ -269,12 +302,21 @@ export default function Menu() {
           }
           aside nav ul {
             flex-direction: column !important;
-            gap: 16px !important;
+            gap: 12px !important;
             width: 100%;
             justify-content: flex-start;
           }
           aside nav ul li {
             width: 100%;
+          }
+        }
+        
+        /* Tablet responsive */
+        @media (min-width: 701px) and (max-width: 1024px) {
+          aside {
+            width: 300px !important;
+            min-width: 300px !important;
+            max-width: 350px !important;
           }
         }
         /* Custom Scrollbar for aside */
@@ -305,6 +347,20 @@ export default function Menu() {
           aside::-webkit-scrollbar-track {
             background: rgba(240, 240, 240, 0.2);
             border-radius: 4px;
+          }
+        }
+        
+        /* Ensure proper scrolling behavior */
+        aside {
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+        }
+        
+        /* Fix for iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+          aside {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
           }
         }
       `}</style>

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import Login from './pages/login'
 import Register from './pages/register'
 import Home from './pages/home'
@@ -18,9 +18,21 @@ function App() {
   )
 }
 
+// Component สำหรับตรวจสอบการล็อกอิน
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+}
+
 function AppContent() {
   const location = useLocation();
   const hideMenu = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register';
+  
   return (
     <>
       {!hideMenu && <Menu />}
@@ -35,15 +47,39 @@ function AppContent() {
         className="main-content"
       >
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/behaviors" element={<Behaviors />} />
-          <Route path="/cases" element={<Cases />} />
-          <Route path="/students" element={<Students />} />
-          <Route path="/admins" element={<Admins />} />
-          <Route path="/logs" element={<LoginLogs />}/>
+          <Route path="/home" element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } />
+          <Route path="/behaviors" element={
+            <ProtectedRoute>
+              <Behaviors />
+            </ProtectedRoute>
+          } />
+          <Route path="/cases" element={
+            <ProtectedRoute>
+              <Cases />
+            </ProtectedRoute>
+          } />
+          <Route path="/students" element={
+            <ProtectedRoute>
+              <Students />
+            </ProtectedRoute>
+          } />
+          <Route path="/admins" element={
+            <ProtectedRoute>
+              <Admins />
+            </ProtectedRoute>
+          } />
+          <Route path="/logs" element={
+            <ProtectedRoute>
+              <LoginLogs />
+            </ProtectedRoute>
+          }/>
         </Routes>
       </main>
       <style>{`
